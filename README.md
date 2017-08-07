@@ -1,0 +1,5 @@
+# Jigsaw Any Badge
+
+This is a full featured application including a web page based on [Jisgsaw七巧板](https://github.com/rdkmaster/jigsaw), and a back end based on [RDK](https://github.com/rdkmaster/rdk). It shows how to use Jigsaw with RDK to build an application.
+
+It is strongly recommended to follow the Tour of Heroes([the official version](https://angular.io/tutorial) or [the version translated to Chinese](https://angular.cn/tutorial)) if you are new to Angular. After that, you can follow [Jigsaw Tourist](https://github.com/rdkmaster/jigsaw/blob/master/docs/tourist/index.md) to start to use Jigsaw, which explains how to use Jigsaw step by step in detail. And this project is ready for you, it explains how to build a full featured application with Jigsaw and RDK. Considering that you are an experienced Angular and Jigsaw developer, this project will not tell you how to build the application step by step, but only shows you the code.

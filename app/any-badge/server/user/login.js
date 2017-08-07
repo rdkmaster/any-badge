@@ -28,14 +28,14 @@
             req.name = req.name ? req.name.trim() : '';
             req.password = req.password ? req.password.trim() : '';
             if (!req.name || !req.password) {
-                Request.completeWithError(450, 'bad parameters');
+                return {error:450, detail: 'bad parameters'};
             }
 
             log('user:', req.name, ',', 'pwd:', req.password);
             Data.useDataSource('mysql_any_badge');
             var r = Data.fetch('select id,name from user where name="' + req.name + '" and password="' + req.password + '"');
             if (r.data.length == 0) {
-                Request.completeWithError(453, '453: user not exist or bad password!');
+                return {error:453, detail: 'user not exist or bad password'};
             }
 
             var key = 'any-badge-session-' + randomString() + '-' + (+new Date);

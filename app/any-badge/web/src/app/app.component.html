@@ -1,11 +1,11 @@
-<!--The whole content below can be removed with the new code.-->
-<div style="text-align:center">
-  <h1 style="padding-bottom: 12px">
-    Welcome to {{title}}!!
-  </h1>
-  <h4 style="padding-bottom: 48px">Every awesome application starts from this seed.</h4>
-
-  <jigsaw-button (click)="gotoTourist()">{{ 'get-started' | translate }}</jigsaw-button>
-  <jigsaw-button (click)="gotoGithub()">{{ 'give-star' | translate }}</jigsaw-button>
+<div class="app-wrap">
+  <header>
+    <h4>Hi Any Badge</h4>
+    <p>
+      如果你发现了故障或者有任何疑问，那请<a href="https://github.com/rdkmaster/jigsaw/issues/new">提交一个issue</a>；
+      如果你觉得Jigsaw还不错，那请<a href="https://github.com/rdkmaster/jigsaw">赏个星星</a>给我们作为鼓励；
+      大数据UED正式网站正在建设中，值得你期待；
+    </p>
+  </header>
+  <router-outlet></router-outlet>
 </div>
-<jigsaw-time></jigsaw-time>

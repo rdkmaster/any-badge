@@ -2,12 +2,23 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {HttpModule} from '@angular/http';
+import {RouterModule} from '@angular/router';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
-import {JigsawTimeModule, JigsawButtonModule} from '@rdkmaster/jigsaw';
+import {JigsawModule} from '@rdkmaster/jigsaw';
 
 import {AppComponent} from './app.component';
 
+const router = [
+  {
+    path: 'login',
+    loadChildren: 'app/user-man/user-man.module#LoginComponent'
+  },
+  {
+    path: 'sign-in',
+    loadChildren: 'app/user-man/user-man.module#SignInComponent'
+  },
+];
 
 @NgModule({
   declarations: [
@@ -15,7 +26,7 @@ import {AppComponent} from './app.component';
   ],
   imports: [
     BrowserModule, FormsModule, HttpModule, BrowserAnimationsModule,
-    TranslateModule.forRoot(), JigsawTimeModule, JigsawButtonModule
+    TranslateModule.forRoot(), RouterModule.forRoot(router), JigsawModule
   ],
   providers: [TranslateService],
   bootstrap: [AppComponent],

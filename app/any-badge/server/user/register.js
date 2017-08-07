@@ -14,13 +14,13 @@ description text(256));
             req.nickName = req.nickName ? req.nickName.trim() : '';
             req.password = req.password ? req.password.trim() : '';
             if (!req.name || !req.nickName || !req.password) {
-                Request.completeWithError(450, '450: bad user parameters');
+                return {error:450, detail: 'bad user parameters'};
             }
 
             Data.useDataSource('mysql_any_badge');
             var r = Data.fetch('select name from user where name="' + req.name + '" or nick_name="' + req.nickName + '"');
             if (r.data.length > 0) {
-                Request.completeWithError(451, '451: user has already exist!');
+                return {error:451, detail: 'user has already exist'};
             }
 
             req.description = req.description ? req.description.trim() : 'This guy is lazy...';
@@ -28,7 +28,7 @@ description text(256));
             r = Data.update('insert into user (name, nick_name, password, description) values(' +
                 '"' + req.name + '", "' + req.nickName + '", "' + req.password + '", "' + req.description + '")');
             if (r.hasOwnProperty('error')) {
-                Request.completeWithError(452, '452: create user error, detail: ' + r.error);
+                return {error:452, detail: 'create user error, detail: ' + r.error};
             }
             return 'ok';
         }

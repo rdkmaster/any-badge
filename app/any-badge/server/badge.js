@@ -9,27 +9,35 @@ description text(256));
 */
 
 (function() {
+    function checkOwner() {
+        var header = Request.getContextHeader();
+        var cookie = header.cookie ? header.cookie : '';
+        var match = cookie.match(/any-badge-session-\w{16}-\d{13}\b/);
+        if (!match) {
+            Request.completeWithError(460, '460: not login or session timed out');
+        }
+
+        var key = match[0];
+        var owner = Cache.aging.get(key);
+        if (!owner) {
+            Request.completeWithError(461, '461: session timed out');
+        }
+        return owner;
+    }
+
     return {
+        get: function(req, s, headers) {
+
+        },
         post: function(req, s, headers) {
-            var header = Request.getContextHeader();
-            var cookie = header.cookie ? header.cookie : '';
-            var match = cookie.match(/any-badge-session-\w{16}-\d{13}\b/);
-            if (!match) {
-                Request.completeWithError(460, '460: not login or session timed out');
-            }
-
-            var key = match[0];
-            var owner = Cache.aging.get(key);
-            if (!owner) {
-                Request.completeWithError(461, '461: session timed out');
-            }
-
             req.subject = req.subject ? req.subject.trim() : '';
             if (!req.subject) {
                 Request.completeWithError(462, '462: need a subject property.');
             }
-
+            
             Data.useDataSource('mysql_any_badge');
+
+            var owner = checkOwner();
             log('owner:', owner, ',', 'subject:', req.subject);
             var r = Data.fetch('select id, subject from badge where owner=' + owner + ' and subject="' + req.subject + '"');
             if (r.data.length > 0) {

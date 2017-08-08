@@ -1,50 +1,30 @@
-import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule} from '@angular/forms';
-import {HttpModule} from '@angular/http';
-import {RouterModule} from '@angular/router';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {TranslateModule, TranslateService} from "@ngx-translate/core";
-import {JigsawModule} from '@rdkmaster/jigsaw';
+
+import {Router} from '@angular/router';
 
 import {AppComponent} from './app.component';
+import {AppRoutingModule} from './app-routing.module';
+import {PageNotFoundComponent} from './not-found.component';
+import {LoginModule} from "./user-man/login.module";
 
-const router = [
-  {
-    path: 'login',
-    loadChildren: 'app/user-man/user-man.module#LoginComponent'
-  },
-  {
-    path: 'sign-in',
-    loadChildren: 'app/user-man/user-man.module#SignInComponent'
-  },
-];
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
   imports: [
-    BrowserModule, FormsModule, HttpModule, BrowserAnimationsModule,
-    TranslateModule.forRoot(), RouterModule.forRoot(router), JigsawModule
+    BrowserModule, FormsModule, BrowserAnimationsModule, LoginModule,
+    AppRoutingModule
   ],
-  providers: [TranslateService],
-  bootstrap: [AppComponent],
-  entryComponents: []
+  declarations: [
+    AppComponent, PageNotFoundComponent
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(translateService: TranslateService) {
-    translateService.setTranslation('zh', {
-      'get-started': '马上开始',
-      'give-star': '给 Jigsaw 点个星星'
-    });
-    translateService.setTranslation('en', {
-      'get-started': 'Get started',
-      'give-star': 'Give us a star on Github.com'
-    });
-
-    const lang: string = translateService.getBrowserLang();
-    translateService.setDefaultLang(lang);
-    translateService.use(lang);
+  // Diagnostic only: inspect router configuration
+  constructor(router: Router) {
+    console.log('Routes: ', JSON.stringify(router.config, undefined, 2));
   }
 }

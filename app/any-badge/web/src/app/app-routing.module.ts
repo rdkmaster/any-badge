@@ -5,15 +5,16 @@ import {PageNotFoundComponent} from './not-found.component';
 import {CanDeactivateGuard} from './services/can-deactivate-guard.service';
 import {AuthGuard} from './services/auth-guard.service';
 import {SelectivePreloadingStrategy} from './utils/selective-preloading-strategy';
+import {FrontPageComponent} from "./front-page/front-page.component";
 
 const appRoutes: Routes = [
   {
-    path: 'admin',
-    loadChildren: 'app/admin/admin.module#AdminModule',
+    path: 'badges',
+    loadChildren: 'app/badges/badges.module#BadgesModule',
     canLoad: [AuthGuard]
   },
-  {path: '', redirectTo: '/badges', pathMatch: 'full'},
-  {path: '**', component: PageNotFoundComponent}
+  { path: '', component: FrontPageComponent },
+  { path: '**', component: PageNotFoundComponent }
 ];
 
 @NgModule({
@@ -23,7 +24,6 @@ const appRoutes: Routes = [
       {
         enableTracing: true, // <-- debugging purposes only
         preloadingStrategy: SelectivePreloadingStrategy,
-
       }
     )
   ],

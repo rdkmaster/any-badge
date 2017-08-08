@@ -17,7 +17,8 @@ import { Badge, BadgeService }  from '../services/badge.service';
     </ul>
 
     <button routerLink="/sidekicks">Go to sidekicks</button>
-  `
+  `,
+  styleUrls: ['./badge-list.component.css']
 })
 export class BadgeListComponent implements OnInit {
   badges: Observable<Badge[]>;

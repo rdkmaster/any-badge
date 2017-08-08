@@ -7,6 +7,7 @@ import { BadgeDetailComponent }  from './badge-detail.component';
 import { BadgeRoutingModule } from './badges-routing.module';
 import { BadgeService } from '../services/badge.service';
 
+
 @NgModule({
   imports: [
     CommonModule,
@@ -20,4 +21,3 @@ import { BadgeService } from '../services/badge.service';
   providers: [ BadgeService ]
 })
 export class BadgesModule {}
-

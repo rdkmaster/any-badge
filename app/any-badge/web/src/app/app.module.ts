@@ -9,12 +9,13 @@ import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
 import {PageNotFoundComponent} from './not-found.component';
 import {LoginModule} from "./user-man/login.module";
+import {FrontPageModule} from "./front-page/front-page.module";
 
 
 @NgModule({
   imports: [
     BrowserModule, FormsModule, BrowserAnimationsModule, LoginModule,
-    AppRoutingModule
+    AppRoutingModule, FrontPageModule
   ],
   declarations: [
     AppComponent, PageNotFoundComponent

@@ -6,7 +6,6 @@ import {Component, Renderer2, ViewContainerRef} from '@angular/core';
     <div class="title">
       <h1 class="logo">Jigsaw Any Badge</h1>
       <span class="link">
-        <a routerLink="/badges" routerLinkActive="active">Badges</a>
         <a routerLink="/login" routerLinkActive="active">Login</a>
         <a routerLink="/sign-up" routerLinkActive="active">Sign Up</a>
       </span>
@@ -17,7 +16,6 @@ import {Component, Renderer2, ViewContainerRef} from '@angular/core';
   styles: [
       `
       .title {
-        padding-bottom: 12px;
       }
 
       .logo {
@@ -26,12 +24,13 @@ import {Component, Renderer2, ViewContainerRef} from '@angular/core';
       
       .link {
         float: right;
+        padding-top: 12px;
       }
       
       h1 {
         color: #369;
         font-family: Arial, Helvetica, sans-serif;
-        font-size: 250%;
+        font-size: 30px;
       }
 
       /* Navigation link styles */

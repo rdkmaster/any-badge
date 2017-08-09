@@ -13,9 +13,6 @@ description text(256));
         var header = Request.getContextHeader();
         var cookie = header.cookie ? header.cookie : '';
 
-        // cookie = 'any-badge-session-jjjjjjjjjjjjjjjj-8888888888888';
-        // Cache.aging.put(cookie, 1);
-
         var match = cookie.match(/any-badge-session-\w{16}-\d{13}\b/);
         if (!match) {
             return {error:460, detail: 'not login or session timed out'};
@@ -30,7 +27,7 @@ description text(256));
         return owner;
     }
 
-    function get(req, s, headers) {
+    function _get(req, s, headers) {
         var owner = checkOwner();
         if (owner.hasOwnProperty('error')) return owner;
 
@@ -44,7 +41,7 @@ description text(256));
         return Data.fetch(sql);
     }
 
-    function post(req, s, headers) {
+    function _post(req, s, headers) {
         req.subject = req.subject ? req.subject.trim() : '';
         if (!req.subject) {
             return {error:462, detail: 'need a subject property'};
@@ -68,15 +65,15 @@ description text(256));
         if (r.hasOwnProperty('error')) {
             return {error:464, detail: 'create badge error, detail: ' + r.error};
         }
-        return 'ok';
+        return {error: 0, detail: 'ok'};
     }
 
-    function put(req, s, headers) {
+    function _put(req, s, headers) {
         var r = get(req, s, headers);
         if (r.hasOwnProperty('error')) return r;
 
         if (r.data.length == 0) {
-            return {error: 465, detail: 'subject[' + req.subject + '] not found'}
+            return {error: 465, detail: 'subject[' + req.subject + '] not found'};
         }
 
         var row = r.data[0];
@@ -84,7 +81,7 @@ description text(256));
         req.color = req.color ? req.color.trim() : row[2];
         req.description = req.description ? req.description.trim() : row[3];
         if (!req.status && !req.color && !req.description) {
-            return {error: 466, detail: 'invalid param, unknown what to update'}
+            return {error: 466, detail: 'invalid param, unknown what to update'};
         }
 
         Data.useDataSource('mysql_any_badge');
@@ -93,10 +90,10 @@ description text(256));
         if (r.hasOwnProperty('error')) {
             return {error:467, detail: 'update badge error, detail: ' + r.error};
         }
-        return 'ok';
+        return {error: 0, detail: 'ok'};
     }
 
-    function delete(req, s, headers) {
+    function _delete(req, s, headers) {
         var r = get(req, s, headers);
         if (r.hasOwnProperty('error')) return r;
 
@@ -109,13 +106,13 @@ description text(256));
         if (r.hasOwnProperty('error')) {
             return {error:468, detail: 'delete badge error, detail: ' + r.error};
         }
-        return 'ok';
+        return {error: 0, detail: 'ok'};
     }
 
     return {
-        get: get,
-        post: post,
-        put: put,
-        delete: delete
+        get: _get,
+        post: _post,
+        put: _put,
+        delete: _delete
     }
 })();

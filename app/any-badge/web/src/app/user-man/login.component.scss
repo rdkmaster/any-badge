@@ -1,0 +1,50 @@
+.login {
+  width: 100%;
+  height: calc(100vh - 70px);
+  background: url('../../assets/login-bg.png') no-repeat;
+  background-size: cover;
+}
+
+.wrap {
+  float: right;
+  margin-right: 200px;
+  margin-bottom: 10px;
+  margin-top: 125px;
+  padding: 24px;
+  line-height: 20px;
+  font-weight: bold;
+  background-color: #fff;
+
+  box-shadow: 0 0 20px rgba(0, 0, 0, .9);
+  -webkit-box-shadow:0 0 20px rgba(0, 0, 0, .9);
+  -moz-box-shadow:0 0 20px rgba(0, 0, 0, .9);
+
+  border-radius: 6px;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+
+  .content-box {
+    padding-bottom: 10px;
+    .content-title {
+      margin-bottom: 20px;
+    }
+    .content-line {
+      margin-bottom: 10px;
+      .form-label {
+        display: inline-block;
+        width: 100px;
+      }
+      .error {
+        color: red;
+      }
+    }
+    jigsaw-button {
+      margin-left: 100px;
+    }
+    .sign-up {
+      margin-left: 12px;
+      vertical-align: middle;
+    }
+  }
+}
+

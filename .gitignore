@@ -36,8 +36,8 @@
 run-rdk.bat
 
 # e2e
-**/web//e2e/*.js
-**/web//e2e/*.map
+**/web/e2e/*.js
+**/web/e2e/*.map
 
 #System Files
 **/web/.DS_Store

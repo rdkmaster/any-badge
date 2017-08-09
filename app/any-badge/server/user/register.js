@@ -30,7 +30,7 @@ description text(256));
             if (r.hasOwnProperty('error')) {
                 return {error:452, detail: 'create user error, detail: ' + r.error};
             }
-            return 'ok';
+            return {error: 0, detail: 'ok'};
         }
     }
 })();

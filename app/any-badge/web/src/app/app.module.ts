@@ -8,8 +8,9 @@ import {Router} from '@angular/router';
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
 import {PageNotFoundComponent} from './not-found.component';
-import {LoginModule} from "./user-man/login.module";
+import {LoginModule} from "./user-man/user-man.module";
 import {FrontPageModule} from "./front-page/front-page.module";
+import {AuthService} from "./services/auth.service";
 
 
 @NgModule({
@@ -20,7 +21,7 @@ import {FrontPageModule} from "./front-page/front-page.module";
   declarations: [
     AppComponent, PageNotFoundComponent
   ],
-  providers: [],
+  providers: [AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

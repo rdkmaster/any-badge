@@ -1,7 +1,26 @@
-
-<h2>LOGIN</h2>
-<p>{{message}}</p>
-<p>
-  <button (click)="login()" *ngIf="!authService.isLoggedIn">Login</button>
-  <button (click)="logout()" *ngIf="authService.isLoggedIn">Logout</button>
-</p>
+<div class="login">
+  <div class="wrap">
+    <div #block class="content-box">
+      <h3 class="content-title">Login Any Badge</h3>
+      <div class="content-line">
+        <label class="form-label">User Name: </label>
+        <jigsaw-input width="200px" [(value)]="userName" (valueChange)="checkUserName()"></jigsaw-input>
+        <label *ngIf="userNameInvalid" class="error">invalid user name</label>
+      </div>
+      <div class="content-line">
+        <label class="form-label">Passord: </label>
+        <jigsaw-input width="200px" [(value)]="password"></jigsaw-input>
+      </div>
+      <div class="content-line">
+        <label class="form-label"></label>
+        <jigsaw-checkbox [(checked)]="rememberMe" (checkedChange)="clearUserFromCookie($event)">Remember Me</jigsaw-checkbox>
+      </div>
+      <div class="content-line">
+        <label class="form-label"></label>
+        <span class="error">{{errorMessage}}</span>
+      </div>
+      <jigsaw-button (click)="login()">Login</jigsaw-button>
+      <span class="sign-up">or <a (click)="signUp()">Sign Me Up</a></span>
+    </div>
+  </div>
+</div>

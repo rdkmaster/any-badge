@@ -41,8 +41,7 @@
             var key = 'any-badge-session-' + randomString() + '-' + (+new Date);
             Cache.aging.put(key, r.data[0][0], req.remember ? 99999999999999 : 30000);
 
-            headers.put('Cookie', key);
-            return 'ok';
+            return {error: 0, detail: key};
         }
     }
 })();

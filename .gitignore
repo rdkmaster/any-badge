@@ -34,6 +34,7 @@
 /proc
 **/server/logs
 run-rdk.bat
+**/app/common
 
 # e2e
 **/web/e2e/*.js

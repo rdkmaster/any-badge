@@ -1,0 +1,134 @@
+<div class="view">
+  <form class="form-controls" #form="ngForm" (ngSubmit)="action(form.value)">
+    <div class="form-title">
+      <h3>{{viewType == 'login' ? 'Login' : 'Sing Up'}}</h3>
+      <hr>
+    </div>
+    <div class="field">
+      <label>User Name *</label>
+      <jigsaw-input width="250px" [ngModel]="userName" name="userName"
+                    required minlength="3" maxlength="64"
+                    [pattern]="userNamePattern" #user="ngModel"></jigsaw-input>
+      <p [hidden]="user.valid || user.pristine || user.touched" class="error">
+        Tip: length in 3 ~ 64, word characters only.
+      </p>
+    </div>
+
+    <!-- sign up only -->
+    <div class="field" *ngIf="viewType == 'sign-up'">
+      <label>Nick Name</label>
+      <jigsaw-input width="250px" name="nickName" ngModel maxlength="32" #nickName="ngModel">
+      </jigsaw-input>
+      <p [hidden]="nickName.valid || nickName.pristine || nickName.touched" class="error">
+        Tip: length should be less than 32 characters.
+      </p>
+    </div>
+
+    <div class="field">
+      <label>Password *</label>
+      <jigsaw-input width="250px" name="password" ngModel required
+                    minlength="6" maxlength="20" #password="ngModel">
+      </jigsaw-input>
+      <p [hidden]="password.valid || password.pristine || password.touched" class="error">
+        Tip: length between 6 ~ 20.
+      </p>
+    </div>
+
+    <!-- login only -->
+    <div class="field" *ngIf="viewType == 'login'">
+      <label></label>
+      <jigsaw-checkbox [(checked)]="remember" (checkedChange)="clearUserFromCookie($event)">
+        Remember me
+      </jigsaw-checkbox>
+    </div>
+
+    <!-- sign up only -->
+    <div class="field" *ngIf="viewType == 'sign-up'">
+      <label>Confirm *</label>
+      <jigsaw-input width="250px" name="confirm" ngModel required
+                    minlength="6" maxlength="20" #confirm="ngModel">
+      </jigsaw-input>
+    </div>
+
+    <!-- sign up only -->
+    <div class="field" *ngIf="viewType == 'sign-up'">
+      <label>Description</label>
+      <jigsaw-input width="250px" name="desc" ngModel maxlength="32" #desc="ngModel">
+      </jigsaw-input>
+      <p [hidden]="desc.valid || desc.pristine || desc.touched" class="error">
+        Tip: length should be less than 256 characters.
+      </p>
+    </div>
+
+    <div class="field">
+      <p class="error">{{errorMessage}}</p>
+    </div>
+
+    <div class="field" *ngIf="viewType == 'login'">
+      <label></label>
+      <button jigsaw-button type="submit" colorType="primary" [disabled]="!form.valid">Login</button>
+      <span class="sign-up">or <a (click)="navigate2SignUp()">Sign Me Up</a></span>
+    </div>
+    <div class="field" *ngIf="viewType == 'sign-up'">
+      <label></label>
+      <button jigsaw-button type="submit" colorType="primary" [disabled]="!form.valid">Sign Up</button>
+    </div>
+  </form>
+</div>
+<style>
+  .view {
+    width: 100%;
+    height: calc(100vh - 70px);
+  }
+
+  .form-title {
+    padding-bottom: 18px;
+  }
+
+  .form-title h3 {
+    text-align: center;
+    padding-bottom: 6px;
+    font-size: 22px;
+  }
+
+  .form-controls {
+    float: right;
+    margin-right: 200px;
+    margin-bottom: 10px;
+    margin-top: 125px;
+    padding: 24px;
+    line-height: 20px;
+    background-color: #fff;
+
+    box-shadow: 0 0 20px rgba(0, 0, 0, .9);
+    -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, .9);
+    -moz-box-shadow: 0 0 20px rgba(0, 0, 0, .9);
+
+    border-radius: 6px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+  }
+
+  label {
+    width: 85px;
+    text-align: right;
+    padding-right: 12px;
+  }
+
+  .field {
+    padding-bottom: 6px;
+  }
+
+  .sign-up {
+    margin-left: 12px;
+    vertical-align: middle;
+    font-weight: bold;
+  }
+
+  .error {
+    color: red;
+    font-size: 10px;
+    font-weight: normal;
+    padding-left: 90px;
+  }
+</style>

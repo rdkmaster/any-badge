@@ -17,54 +17,54 @@ import {Router} from "@angular/router";
     <hr class="title-separator">
     <router-outlet></router-outlet>
   `,
-  styles: [`
-      .title {
-        height: 54px;
-        margin: 6px;
-      }
+  styles: [`    
+    .title {
+      height: 54px;
+      margin: 6px;
+    }
 
-      .logo {
-        display: inline-block;
-      }
-      
-      .link {
-        float: right;
-        margin-top: -44px;
-      }
-      
-      h1 {
-        color: #369;
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 30px;
-      }
+    .logo {
+      display: inline-block;
+    }
 
-      /* Navigation link styles */
-      a {
-        padding: 5px 10px;
-        text-decoration: none;
-        margin-right: 10px;
-        margin-top: 10px;
-        display: inline-block;
-        background-color: #eee;
-        border-radius: 4px;
-      }
+    .link {
+      float: right;
+      margin-top: -44px;
+    }
 
-      a:visited, a:link {
-        color: #607D8B;
-      }
+    h1 {
+      color: #369;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 30px;
+    }
 
-      a:hover {
-        color: #039be5;
-        background-color: #CFD8DC;
-      }
+    /* Navigation link styles */
+    a {
+      padding: 5px 10px;
+      text-decoration: none;
+      margin-right: 10px;
+      margin-top: 10px;
+      display: inline-block;
+      background-color: #eee;
+      border-radius: 4px;
+    }
 
-      a.active {
-        color: #039be5;
-      }
-    `]
+    a:visited, a:link {
+      color: #607D8B;
+    }
+
+    a:hover {
+      color: #039be5;
+      background-color: #CFD8DC;
+    }
+
+    a.active {
+      color: #039be5;
+    }
+  `]
 })
 export class AppComponent {
-  constructor(public authService: AuthService, private _router:Router,
+  constructor(public authService: AuthService, private _router: Router,
               public viewContainerRef: ViewContainerRef, public renderer: Renderer2) {
   }
 

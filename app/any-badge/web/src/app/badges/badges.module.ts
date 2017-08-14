@@ -1,23 +1,23 @@
-import { NgModule }       from '@angular/core';
-import { CommonModule }   from '@angular/common';
-import { FormsModule }    from '@angular/forms';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {HttpModule} from "@angular/http";
 
-import { BadgeListComponent }    from './badge-list.component';
-import { BadgeDetailComponent }  from './badge-detail.component';
-import { BadgeRoutingModule } from './badges-routing.module';
-import { BadgeService } from '../services/badge.service';
+import {JigsawButtonModule, JigsawTableModule, PopupService} from "@rdkmaster/jigsaw";
+
+import {BadgeListComponent, BadgeSvgTableCell, OperationTableCell} from './badges.component';
+import {BadgeRoutingModule} from './badges-routing.module';
 
 
 @NgModule({
   imports: [
-    CommonModule,
-    FormsModule,
-    BadgeRoutingModule
+    CommonModule, FormsModule, BadgeRoutingModule, HttpModule, JigsawButtonModule, JigsawTableModule
   ],
   declarations: [
-    BadgeListComponent,
-    BadgeDetailComponent
+    BadgeListComponent, OperationTableCell, BadgeSvgTableCell
   ],
-  providers: [ BadgeService ]
+  entryComponents: [OperationTableCell, BadgeSvgTableCell],
+  providers: [PopupService]
 })
-export class BadgesModule {}
+export class BadgesModule {
+}

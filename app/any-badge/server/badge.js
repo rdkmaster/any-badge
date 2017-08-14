@@ -9,10 +9,10 @@ description text(256));
 */
 
 (function() {
-    function checkOwner() {
+    function _checkOwner() {
         var header = Request.getContextHeader();
-        var cookie = header.cookie ? header.cookie : '';
-
+        var cookie = header.Cookie ? header.Cookie : '';
+        
         var match = cookie.match(/any-badge-session-\w{16}-\d{13}\b/);
         if (!match) {
             return {error:460, detail: 'not login or session timed out'};
@@ -28,7 +28,7 @@ description text(256));
     }
 
     function _get(req, s, headers) {
-        var owner = checkOwner();
+        var owner = _checkOwner();
         if (owner.hasOwnProperty('error')) return owner;
 
         Data.useDataSource('mysql_any_badge');
@@ -47,7 +47,7 @@ description text(256));
             return {error:462, detail: 'need a subject property'};
         }
 
-        var owner = checkOwner();
+        var owner = _checkOwner();
         if (owner.hasOwnProperty('error')) return owner;
 
         Data.useDataSource('mysql_any_badge');
@@ -69,7 +69,10 @@ description text(256));
     }
 
     function _put(req, s, headers) {
-        var r = get(req, s, headers);
+        var owner = _checkOwner();
+        if (owner.hasOwnProperty('error')) return owner;
+
+        var r = _get(req, s, headers);
         if (r.hasOwnProperty('error')) return r;
 
         if (r.data.length == 0) {
@@ -85,8 +88,9 @@ description text(256));
         }
 
         Data.useDataSource('mysql_any_badge');
-        var r = Data.update('update status, color, description set status="' +
-            req.status + '", color="' + req.color + '", description="' + req.description + '"');
+
+        r = Data.update('update badge set status="' + req.status + '", color="' + req.color +'", description="' +
+            req.description + '" where subject="' + req.subject + '" and owner=' + owner + ';');
         if (r.hasOwnProperty('error')) {
             return {error:467, detail: 'update badge error, detail: ' + r.error};
         }
@@ -94,7 +98,7 @@ description text(256));
     }
 
     function _delete(req, s, headers) {
-        var r = get(req, s, headers);
+        var r = _get(req, s, headers);
         if (r.hasOwnProperty('error')) return r;
 
         if (r.data.length == 0) {
@@ -113,6 +117,7 @@ description text(256));
         get: _get,
         post: _post,
         put: _put,
-        delete: _delete
+        delete: _delete,
+        checkOwner: _checkOwner
     }
 })();

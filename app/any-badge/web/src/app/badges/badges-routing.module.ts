@@ -1,12 +1,10 @@
 import { NgModule }             from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { BadgeListComponent }    from './badge-list.component';
-import { BadgeDetailComponent }  from './badge-detail.component';
+import { BadgeListComponent }    from './badges.component';
 
 const badgesRoutes: Routes = [
-  { path: 'badges',  component: BadgeListComponent },
-  { path: 'badge/:id', component: BadgeDetailComponent }
+  { path: '',  component: BadgeListComponent }
 ];
 
 @NgModule({

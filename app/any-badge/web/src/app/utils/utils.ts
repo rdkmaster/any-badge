@@ -1,3 +1,5 @@
+import {TableData, TableMatrixRow} from "@rdkmaster/jigsaw";
+
 export class CookieUtils {
   private static _toObject(): any {
     const values = document.cookie.split(/\s*;\s*/g);
@@ -20,7 +22,14 @@ export class CookieUtils {
     document.cookie = `${key}=${value};`;
   }
 
-  static del(key: string):void {
+  public static del(key: string):void {
     CookieUtils.put(key, '');
+  }
+}
+
+export class Utils {
+  public static isValidRowData(tableData:TableData, row:number):boolean {
+    const rowData:TableMatrixRow = tableData.data[row];
+    return !!rowData[1].toString().match(/^[a-z0-9-_]+$/i);
   }
 }

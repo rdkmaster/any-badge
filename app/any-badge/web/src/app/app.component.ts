@@ -17,7 +17,7 @@ import {Router} from "@angular/router";
     <hr class="title-separator">
     <router-outlet></router-outlet>
   `,
-  styles: [`    
+  styles: [`
     .title {
       height: 54px;
       margin: 6px;

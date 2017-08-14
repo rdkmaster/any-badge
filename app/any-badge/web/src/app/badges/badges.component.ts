@@ -1,19 +1,33 @@
 import 'rxjs/add/operator/switchMap';
 import {Http, RequestOptionsArgs} from "@angular/http";
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {Subject} from "rxjs/Subject";
 import {
-  AdditionalColumnDefine, ColumnDefine, JigsawErrorAlert, PopupEffect, PopupService, TableCellEditor, TableCellRenderer,
-  TableData
+  AdditionalColumnDefine,
+  ColumnDefine,
+  JigsawErrorAlert, JigsawInput,
+  PopupService,
+  TableCellEditor,
+  TableCellRenderer,
+  TableData, TableDataMatrix, TableMatrixRow
 } from "@rdkmaster/jigsaw";
 import {HttpResult} from "../utils/typings";
-import {Subject} from "rxjs/Subject";
+import {Utils} from "../utils/utils";
 
 const refreshSvgSubject = new Subject();
+const NEW_BADGE = '< new badge >';
+const tableDataBackup: TableDataMatrix = [];
 
 @Component({
   template: `
-    <a (click)="saveBadge(tableData, row)"><i class="fa fa-floppy-o" aria-hidden="true"></i></a>
-    <a (click)="removeBadge(tableData.data[row])"><i class="fa fa-trash" aria-hidden="true"></i></a>
+    <span [style.background-color]="getColor(tableData, row)">
+      <a *ngIf="isValidRowData(tableData, row)" (click)="saveBadge(tableData, row)">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </a>
+      <a *ngIf="isValidRowData(tableData, row)" (click)="removeBadge(tableData.data[row])">
+        <i class="fa fa-trash" aria-hidden="true"></i>
+      </a>
+    </span>
   `,
   styles: [`
     a:hover {
@@ -24,8 +38,8 @@ const refreshSvgSubject = new Subject();
       font-size: 16px;
     }
 
-    a:first-child {
-      margin-right: 12px;
+    a:last-child {
+      margin-left: 12px;
     }
   `]
 })
@@ -34,7 +48,7 @@ export class OperationTableCell extends TableCellRenderer {
     super();
   }
 
-  public saveBadge(tableData:TableData, row:number) {
+  public saveBadge(tableData: TableData, row: number) {
     const rowData = tableData.data[row];
     this._http.put('/rdk/service/app/any-badge/server/badge', {
       subject: rowData[1], status: rowData[2], color: rowData[3], description: rowData[4]
@@ -47,11 +61,12 @@ export class OperationTableCell extends TableCellRenderer {
           });
         } else {
           refreshSvgSubject.next();
+          tableDataBackup[row] = rowData.concat();
         }
       });
   }
 
-  public removeBadge(tableData:TableData, row:number) {
+  public removeBadge(tableData: TableData, row: number) {
     const rowData = tableData.data[row];
     let opt = <RequestOptionsArgs>{params: `subject=${rowData[1]}`};
     this._http.delete('/rdk/service/app/any-badge/server/badge', opt)
@@ -66,6 +81,16 @@ export class OperationTableCell extends TableCellRenderer {
         }
       });
   }
+
+  public isValidRowData(tableData:TableData, row:number):boolean {
+    return Utils.isValidRowData(tableData, row);
+  }
+
+  public getColor(tableData:TableData, row:number): string {
+    const row1 = tableData.data[row];
+    const row2 = tableDataBackup[row];
+    return row1 && row2 && row1.toString() === row2.toString() ? '#fff' : 'red';
+  }
 }
 
 @Component({
@@ -73,6 +98,7 @@ export class OperationTableCell extends TableCellRenderer {
 })
 export class BadgeSvgTableCell extends TableCellRenderer {
   timestamp: number = +new Date;
+
   constructor() {
     super();
     refreshSvgSubject.subscribe(() => {
@@ -83,12 +109,36 @@ export class BadgeSvgTableCell extends TableCellRenderer {
 }
 
 @Component({
+  template: `
+    <jigsaw-input #input [(value)]="cellData" [clearable]="false"
+                  (focus)="onFocus()" (blur)="dispatchChangeEvent(cellData)">
+    </jigsaw-input>
+  `
+})
+export class SubjectEditor extends TableCellRenderer implements AfterViewInit {
+
+  @ViewChild(JigsawInput) input: JigsawInput;
+
+  ngAfterViewInit() {
+    this.input.focus();
+  }
+
+  onFocus() {
+    if (Utils.isValidRowData(this.tableData, this.row)) {
+      setTimeout(() => {
+        this.dispatchChangeEvent(this.cellData);
+      });
+    }
+  }
+}
+
+@Component({
   templateUrl: './badges.component.html',
   styleUrls: ['./badges.component.css']
 })
 export class BadgeListComponent implements OnInit {
-  badges: TableData = new TableData();
-  columns: ColumnDefine[] = [
+  public badges: TableData = new TableData();
+  public columns: ColumnDefine[] = [
     {
       target: 'badge',
       width: '30%',
@@ -98,7 +148,11 @@ export class BadgeListComponent implements OnInit {
     },
     {
       target: 'subject',
-      width: '10%'
+      width: '10%',
+      cell: {
+        editable: true,
+        editorRenderer: SubjectEditor,
+      }
     },
     {
       target: 'status',
@@ -125,7 +179,7 @@ export class BadgeListComponent implements OnInit {
       }
     }
   ];
-  additionalColumns: AdditionalColumnDefine[] = [
+  public additionalColumns: AdditionalColumnDefine[] = [
     {
       width: '10%',
       header: {
@@ -142,10 +196,17 @@ export class BadgeListComponent implements OnInit {
     this.badges.dataReviser = (data) => {
       data.header = ['Badge', 'Subject', 'Status', 'Color', 'Description'];
       data.field = ['badge', 'subject', 'status', 'color', 'description'];
-      data.data.forEach(item => item.unshift(`/rdk/service/app/any-badge/server/badge-svg?subject=${item[0]}`));
-      console.log(data);
+      data.data.forEach(item => {
+        item.unshift(`/rdk/service/app/any-badge/server/badge-svg?subject=${item[0]}`);
+        tableDataBackup.push(item.concat());
+      });
       return data;
     }
+  }
+
+  public newBadge(): void {
+    this.badges.data.push(['', NEW_BADGE, NEW_BADGE, NEW_BADGE, NEW_BADGE]);
+    this.badges.refresh();
   }
 
   ngOnInit() {

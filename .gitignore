@@ -30,7 +30,7 @@
 **/web/npm-debug.log
 **/web/testem.log
 **/web/typings
-**/web/package-lock.json
+package-lock.json
 /proc
 **/server/logs
 run-rdk.bat

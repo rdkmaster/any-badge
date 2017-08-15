@@ -27,15 +27,18 @@ const shared: SharedInfo[] = [];
       <a (click)="removeBadge(tableData, row)">
         <i class="fa fa-trash" aria-hidden="true"></i>
       </a>
+      <a (click)="popCopyDialog(tableData, row)">
+        <i class="fa fa-copy" aria-hidden="true"></i>
+      </a>
     </span>
   `,
   styles: [`
     a {
-      font-size: 16px;
+      font-size: 15px;
     }
-
+    
     a:last-child {
-      margin-left: 12px;
+      margin-left: 8px;
     }
 
     span {
@@ -103,6 +106,10 @@ export class OperationTableCell extends TableCellRenderer {
           tableData.refresh();
         }
       });
+  }
+
+  public popCopyDialog(tableData: TableData, row: number) {
+
   }
 }
 

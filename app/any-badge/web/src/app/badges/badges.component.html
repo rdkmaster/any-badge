@@ -1,10 +1,10 @@
 <div class="view">
-  <div>
+  <div class="toolbar">
     <jigsaw-button (click)="newBadge()">New Badge</jigsaw-button>
   </div>
-  <div>
+  <div class="content">
     <jigsaw-table [data]="badges" [columnDefines]="columns" [additionalColumnDefines]="additionalColumns"
-                  (dataChange)="onDataChange($event)">
+                  [lineEllipsis]="true" (dataChange)="onDataChange($event)">
     </jigsaw-table>
   </div>
 </div>

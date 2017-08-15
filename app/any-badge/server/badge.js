@@ -27,16 +27,6 @@ description text(256));
         return owner;
     }
 
-    function _escapeString(str) {
-        return str.replace(/&/g, '&amp;').replace(/>/g, '&gt;').replace(/</g, '&lt;')
-                  .replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
-    }
-
-    function _deescapeString(str) {
-        return str.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&')
-                  .replace(/&quot;/g, '"').replace(/&#x27;/g, "'");
-    }
-
     function _get(req, s, headers) {
         var owner = _checkOwner();
         if (owner.hasOwnProperty('error')) return owner;
@@ -50,8 +40,8 @@ description text(256));
 
         var r = Data.fetch(sql);
         for (var i = 0; i < r.data.length; i++) {
-            r.data[i][1] = _deescapeString(r.data[i][1]);
-            r.data[i][2] = _deescapeString(r.data[i][2]);
+            r.data[i][1] = r.data[i][1];
+            r.data[i][2] = r.data[i][2];
         }
         return r;
     }
@@ -71,8 +61,8 @@ description text(256));
             return {error:463, detail: 'subject has already exist'};
         }
 
-        req.status = _escapeString(req.status ? req.status.trim() : '--');
-        req.color = _escapeString(req.color ? req.color.trim() : 'good');
+        req.status = req.status ? req.status.trim() : '--';
+        req.color = req.color ? req.color.trim() : 'good';
         req.description = req.description ? req.description.trim() : '';
 
         var r = Data.update('insert into badge (owner, subject, status, color, description) values(' +
@@ -95,8 +85,8 @@ description text(256));
         }
 
         var row = r.data[0];
-        req.status = _escapeString(req.status ? req.status.trim() : row[1]);
-        req.color = _escapeString(req.color ? req.color.trim() : row[2]);
+        req.status = req.status ? req.status.trim() : row[1];
+        req.color = req.color ? req.color.trim() : row[2];
         req.description = req.description ? req.description.trim() : row[3];
         if (!req.status && !req.color && !req.description) {
             return {error: 466, detail: 'invalid param, unknown what to update'};

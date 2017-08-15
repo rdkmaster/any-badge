@@ -31,6 +31,11 @@ import {Router} from "@angular/router";
       float: right;
       margin-top: -44px;
     }
+    
+    .title-separator {
+      margin-bottom: 12px;
+      color: #000;
+    }
 
     h1 {
       color: #369;

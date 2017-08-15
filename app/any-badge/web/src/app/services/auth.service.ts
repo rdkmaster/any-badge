@@ -16,10 +16,19 @@ export class AuthService {
   }
 
   public isLoggedIn = false;
-  // public errorMessage = '';
+  public loggedInUser:string = 'unknown user';
 
   // store the URL so we can redirect after logging in
   public redirectUrl: string;
+
+  public checkLoginStatus():Observable<boolean>|boolean {
+    return this.isLoggedIn ? true : this._http.get('/rdk/service/app/any-badge/server/user/login')
+      .map((result: HttpResult) => {
+        this.isLoggedIn = result.error == 0;
+        this.loggedInUser = this.isLoggedIn ? result.detail : 'unknown user';
+        return this.isLoggedIn;
+      });
+  }
 
   public login(name: string, password: string): Observable<string> {
     const url = '/rdk/service/app/any-badge/server/user/login';
@@ -28,6 +37,7 @@ export class AuthService {
 
       if (this.isLoggedIn) {
         CookieUtils.put('session', result.detail);
+        this.loggedInUser = name;
       }
 
       return !this.isLoggedIn ? result.detail : '';
@@ -39,6 +49,7 @@ export class AuthService {
     this._http.post(url, {}).subscribe((result: HttpResult) => {
       CookieUtils.del('session');
       this.isLoggedIn = result.error > 0;
+      this.loggedInUser = 'unknown user';
       if (result.error > 0) {
         console.error(result);
       }

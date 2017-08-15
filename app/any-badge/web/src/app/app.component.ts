@@ -1,6 +1,7 @@
-import {Component, Renderer2, ViewContainerRef} from '@angular/core';
+import {Component, OnInit, Renderer2, ViewContainerRef} from '@angular/core';
 import {AuthService} from "./services/auth.service";
 import {Router} from "@angular/router";
+import {Observable} from "rxjs/Observable";
 
 @Component({
   selector: 'jigsaw-any-badge',
@@ -68,7 +69,7 @@ import {Router} from "@angular/router";
     }
   `]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   constructor(public authService: AuthService, private _router: Router,
               public viewContainerRef: ViewContainerRef, public renderer: Renderer2) {
   }
@@ -76,6 +77,13 @@ export class AppComponent {
   public logout() {
     this.authService.logout();
     this._router.navigate(['']);
+  }
+
+  ngOnInit() {
+    const result = this.authService.checkLoginStatus();
+    if (result instanceof Observable) {
+      result.subscribe();
+    }
   }
 }
 

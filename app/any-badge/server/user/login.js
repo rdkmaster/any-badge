@@ -3,6 +3,8 @@
     var CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var CHARS_LEN = CHARS.length - 1;
 
+    var checkOwner = require('$svr/utils.js').checkOwner;
+
     function random(min, max, isFloat) {
         var r = Math.random() * 1000000;
         if (isFloat) {
@@ -24,6 +26,21 @@
     }
 
     return {
+        get: function(req, s, headers) {
+            var owner = checkOwner();
+            if (owner.hasOwnProperty('error')) {
+                return {error: 454, detail: 'not login'};
+            }
+
+            Data.useDataSource('mysql_any_badge');
+            var r = Data.fetch('select nick_name from user where id=' + owner);
+            if (r.hasOwnProperty('error') || r.data.length == 0) {
+                Log.error('internal error, unknown owner = ' + owner);
+                return {error: 454, detail: 'not login'};
+            }
+
+            return {error: 0, detail: r.data[0][0]};
+        },
         post: function(req, s, headers) {
             req.name = req.name ? req.name.trim() : '';
             req.password = req.password ? req.password.trim() : '';

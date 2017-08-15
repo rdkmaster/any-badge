@@ -125,7 +125,7 @@ export class BadgeSvgTableCell extends TableCellRenderer {
 @Component({
   template: `
     <jigsaw-input #input [(value)]="cellData" [clearable]="false" jigsawTooltip="these chars only: a-z 0-9 - _"
-                  (blur)="dispatchChangeEvent(this.cellData)" (cellDataChange)="onChange()">
+                  (blur)="dispatchChangeEvent(this.cellData)">
     </jigsaw-input>
   `
 })

@@ -1,5 +1,5 @@
 (function() {
-    var checkOwner = require('$svr/badge.js').checkOwner;
+    var checkOwner = require('$svr/utils.js').checkOwner;
     var lengthInfo = {
         "a": 7, "b": 7, "c": 6, "d": 6, "e": 7, "f": 5, "g": 7, "h": 7, "i": 2, "j": 4, "k": 7, "l": 3,
         "m": 11, "n": 7, "o": 6, "p": 7, "q": 7, "r": 4, "s": 5, "t": 5, "u": 7, "v": 6, "w": 9, "x": 7,

@@ -6,12 +6,13 @@ import {JigsawButtonModule, JigsawCheckBoxModule, JigsawInputModule} from "@rdkm
 import {LoginRoutingModule} from "./user-man-routing.module";
 import {LoginComponent} from "./login.component";
 import {SignUpComponent} from "./sign-up.component";
+import {AuthService} from "../services/auth.service";
 
 @NgModule({
   imports: [CommonModule, HttpClientModule, LoginRoutingModule, FormsModule,
     JigsawInputModule, JigsawButtonModule, JigsawCheckBoxModule],
   declarations: [LoginComponent, SignUpComponent],
-  providers: [HttpClient]
+  providers: [HttpClient, AuthService]
 })
 export class LoginModule {
 }

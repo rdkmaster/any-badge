@@ -9,7 +9,7 @@ import {CookieUtils} from "../utils/utils";
 })
 export class LoginComponent extends UserManBase {
   constructor(public authService: AuthService, public router: Router) {
-    super();
+    super(authService);
     this.viewType = 'login';
     this.remember = CookieUtils.get('remember') !== '0';
   }
@@ -20,6 +20,8 @@ export class LoginComponent extends UserManBase {
     } else {
       CookieUtils.del('user');
     }
+
+    this.waitingForBadge = true;
 
     this.authService.login(loginInfo.userName, loginInfo.password).subscribe((errorMessage:string) => {
       this.errorMessage = errorMessage;

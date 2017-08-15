@@ -45,7 +45,7 @@
         var owner = checkOwner();
         if (owner.hasOwnProperty('error')) return owner;
 
-        req.subject = req.subject ? req.subject.trim() : '';
+        req.subject = req.subject ? (req.subject+'').trim() : '';
         if (!req.subject) {
             return {error:469, detail: 'need "subject" parameter.'};
         }

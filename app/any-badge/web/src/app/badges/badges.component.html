@@ -1,5 +1,10 @@
 <div class="view">
-  <div><jigsaw-button (click)="newBadge()">New Badge</jigsaw-button></div>
-  <div><jigsaw-table [data]="badges" [columnDefines]="columns" [additionalColumnDefines]="additionalColumns">
-  </jigsaw-table></div>
+  <div>
+    <jigsaw-button (click)="newBadge()">New Badge</jigsaw-button>
+  </div>
+  <div>
+    <jigsaw-table [data]="badges" [columnDefines]="columns" [additionalColumnDefines]="additionalColumns"
+                  (dataChange)="onDataChange($event)">
+    </jigsaw-table>
+  </div>
 </div>

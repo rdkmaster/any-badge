@@ -11,7 +11,9 @@ import {AuthService} from "../services/auth.service";
         Put any badges to your github projects
       </h2>
       <div class="links">
-        <jigsaw-button colorType="danger" preSize="large"><span class="text">Badges</span></jigsaw-button>
+        <jigsaw-button routerLink="/badges" colorType="danger" preSize="large">
+          <span class="text">Badges</span>
+        </jigsaw-button>
         <jigsaw-button preSize="large"><span class="text">About Jigsaw</span></jigsaw-button>
       </div>
     </div>
@@ -19,13 +21,12 @@ import {AuthService} from "../services/auth.service";
   styles: [`
     .container {
       width: 980px;
-      margin-right: auto;
-      margin-left: auto;
+      margin: 60px auto 0 auto;
       text-align: center;
     }
     
     .links {
-      margin-top: 66px;
+      margin-top: 36px;
       font-size: 85px;
     }
     

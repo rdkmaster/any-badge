@@ -2,8 +2,9 @@ import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-
 import {Router} from '@angular/router';
+
+import {JigsawTagModule, PopupService} from "@rdkmaster/jigsaw";
 
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
@@ -16,12 +17,12 @@ import {AuthService} from "./services/auth.service";
 @NgModule({
   imports: [
     BrowserModule, FormsModule, BrowserAnimationsModule, LoginModule,
-    AppRoutingModule, FrontPageModule
+    AppRoutingModule, FrontPageModule, JigsawTagModule
   ],
   declarations: [
     AppComponent, PageNotFoundComponent
   ],
-  providers: [AuthService],
+  providers: [AuthService, PopupService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -1,0 +1,24 @@
+<div class="title">
+  <h1 class="logo"><a routerLink="/">Jigsaw Any Badge</a></h1>
+  <p>Put any badges to your github project.</p>
+  <span class="link">
+    <div *ngIf="!authService.isLoggedIn">
+      <a routerLink="/login" routerLinkActive="active">Login</a> or
+      <a routerLink="/sign-up" routerLinkActive="active">Sign Up</a>
+    </div>
+    <div #menuDocker *ngIf="authService.isLoggedIn"
+         (mouseenter)="showMenu(menu, menuDocker)"
+         (mouseleave)="hideMenuLater()">
+      <jigsaw-tag color="coral">{{authService.loggedInUser}}</jigsaw-tag>
+      <i class="fa fa-angle-down" style="cursor: pointer" aria-hidden="true"></i>
+    </div>
+  </span>
+</div>
+<router-outlet></router-outlet>
+
+<ng-template #menu>
+  <ul class="menu" (mouseenter)="onMenuMouseEnter()" (mouseleave)="hideMenuLater()">
+    <li routerLink="/account">Account</li>
+    <li (click)="authService.logout()">Logout</li>
+  </ul>
+</ng-template>

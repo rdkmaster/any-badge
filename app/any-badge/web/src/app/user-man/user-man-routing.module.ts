@@ -1,14 +1,16 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 
-import {BadgeAuthGuard} from '../services/auth-guard.service';
+import {AuthGuard} from '../services/auth-guard.service';
 import {AuthService} from '../services/auth.service';
 import {LoginComponent} from './login.component';
 import {SignUpComponent} from "./sign-up.component";
+import {AccountComponent} from "./account.component";
 
 const loginRoutes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'sign-up', component: SignUpComponent},
+  {path: 'account', component: AccountComponent, canActivate: [AuthGuard], canActivateChild: [AuthGuard]},
 ];
 
 @NgModule({
@@ -19,7 +21,7 @@ const loginRoutes: Routes = [
     RouterModule
   ],
   providers: [
-    BadgeAuthGuard,
+    AuthGuard,
     AuthService
   ]
 })

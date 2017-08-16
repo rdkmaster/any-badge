@@ -77,7 +77,7 @@
     </form>
     <div *ngIf="authService.isLoggedIn && !waitingForBadge">
       <p class="text-message">It seems that <b>{{authService.loggedInUser}}</b> has logged in,
-        you can <a routerLink="/">go to the main page</a> to explore Jigsaw Any Badge with this account,
+        you can <a routerLink="/">go to the main page</a> to explore Jigsaw Any Badge with this accoun,
         or <a (click)="authService.logout()">logout</a> this account if it is not yours.
       </p>
     </div>
@@ -96,13 +96,13 @@
     line-height: 20px;
     background-color: #fff;
 
-    box-shadow: 0 0 20px rgba(0, 0, 0, .9);
-    -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, .9);
-    -moz-box-shadow: 0 0 20px rgba(0, 0, 0, .9);
+    box-shadow: 0 0 20px rgba(0, 0, 0, .6);
+    -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, .6);
+    -moz-box-shadow: 0 0 20px rgba(0, 0, 0, .6);
 
-    border-radius: 6px;
-    -webkit-border-radius: 6px;
-    -moz-border-radius: 6px;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
   }
 
   .panel-title {
@@ -117,7 +117,7 @@
 
   .text-message {
     width: 300px;
-    font-size: 13px;
+    font-size: 12px;
   }
 
   label {

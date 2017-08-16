@@ -3,11 +3,10 @@ import {
   ActivatedRouteSnapshot, CanActivate, CanActivateChild, CanLoad, Route, Router,
   RouterStateSnapshot
 } from '@angular/router';
-import {Observable} from "rxjs/Observable";
 import {AuthService} from './auth.service';
 
 @Injectable()
-export class BadgeAuthGuard implements CanLoad, CanActivate, CanActivateChild {
+export class AuthGuard implements CanLoad, CanActivate, CanActivateChild {
 
   constructor(private authService: AuthService, private router: Router) {
   }

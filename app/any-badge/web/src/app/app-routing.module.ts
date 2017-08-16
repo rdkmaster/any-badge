@@ -9,8 +9,7 @@ import {FrontPageComponent} from "./front-page/front-page.component";
 
 const appRoutes: Routes = [
   {
-    path: 'badges',
-    loadChildren: 'app/badges/badges.module#BadgesModule',
+    path: 'badges', loadChildren: 'app/badges/badges.module#BadgesModule',
     canLoad: [BadgeAuthGuard]
   },
   { path: '', component: FrontPageComponent },

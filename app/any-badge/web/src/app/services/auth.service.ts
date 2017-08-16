@@ -18,16 +18,24 @@ export class AuthService {
   public isLoggedIn = false;
   public loggedInUser:string = 'unknown user';
 
+  private _loginObservable: Observable<any>;
+
   // store the URL so we can redirect after logging in
   public redirectUrl: string;
 
   public checkLoginStatus():Observable<boolean>|boolean {
-    return this.isLoggedIn ? true : this._http.get('/rdk/service/app/any-badge/server/user/login')
-      .map((result: HttpResult) => {
-        this.isLoggedIn = result.error == 0;
-        this.loggedInUser = this.isLoggedIn ? result.detail : 'unknown user';
-        return this.isLoggedIn;
-      });
+    if (this.isLoggedIn) {
+      return true;
+    }
+    if (!this._loginObservable) {
+      this._loginObservable = this._http.get('/rdk/service/app/any-badge/server/user/login')
+        .map((result: HttpResult) => {
+          this.isLoggedIn = result.error == 0;
+          this.loggedInUser = this.isLoggedIn ? result.detail : 'unknown user';
+          return this.isLoggedIn;
+        });
+    }
+    return this._loginObservable;
   }
 
   public login(name: string, password: string): Observable<string> {
@@ -48,12 +56,12 @@ export class AuthService {
     const url = '/rdk/service/app/any-badge/server/user/logout';
     this._http.post(url, {}).subscribe((result: HttpResult) => {
       CookieUtils.del('session');
-      this.isLoggedIn = result.error > 0;
       this.loggedInUser = 'unknown user';
       if (result.error > 0) {
         console.error(result);
       }
     });
+    this.isLoggedIn = false;
   }
 
   public signUp(user: string, password: string, nick: string = '', description: string = ''): Observable<string> {

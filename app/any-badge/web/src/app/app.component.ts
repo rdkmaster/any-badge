@@ -7,8 +7,8 @@ import {Observable} from "rxjs/Observable";
   selector: 'jigsaw-any-badge',
   template: `
     <div class="title">
-      <h1 class="logo">Jigsaw Any Badge</h1>
-      <p>Put any badge to your github project.</p>
+      <h1 class="logo"><a routerLink="/">Jigsaw Any Badge</a></h1>
+      <p>Put any badges to your github project.</p>
       <span class="link">
         <a *ngIf="!authService.isLoggedIn" routerLink="/login" routerLinkActive="active">Login</a>
         <a *ngIf="!authService.isLoggedIn" routerLink="/sign-up" routerLinkActive="active">Sign Up</a>
@@ -39,33 +39,17 @@ import {Observable} from "rxjs/Observable";
     }
 
     h1 {
-      color: #369;
+      color: #fff;
       font-family: Arial, Helvetica, sans-serif;
       font-size: 30px;
     }
 
-    /* Navigation link styles */
     a {
-      padding: 5px 10px;
+      color: #fff;
       text-decoration: none;
-      margin-right: 10px;
-      margin-top: 10px;
-      display: inline-block;
-      background-color: #eee;
-      border-radius: 4px;
     }
-
-    a:visited, a:link {
-      color: #607D8B;
-    }
-
-    a:hover {
-      color: #039be5;
-      background-color: #CFD8DC;
-    }
-
-    a.active {
-      color: #039be5;
+    p {
+      color: #fff;
     }
   `]
 })

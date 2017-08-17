@@ -1,7 +1,4 @@
-import {
-  AfterContentInit, Component, QueryList, ViewChild,
-  ViewChildren
-} from "@angular/core";
+import {AfterContentInit, Component, ViewChild} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {ButtonInfo, DialogBase, JigsawDialog, JigsawInput, PopupInfo, PopupService} from "@rdkmaster/jigsaw";
 import {HttpResult} from "../utils/typings";
@@ -13,6 +10,10 @@ type PasswordInfo = {
   confirm: string
 };
 
+enum ConfirmType {
+  changePrivateKey, deleteAccount
+}
+
 @Component({
   template: `
     <jigsaw-dialog width="400px" (answer)="onClose($event)">
@@ -21,11 +22,8 @@ type PasswordInfo = {
       </div>
       <div jigsaw-body>
         <p>{{message}}</p>
-        <span>Enter your {{needPasswordConfirm ? 'password' : 'user name'}} to confirm:</span>
-        <jigsaw-input *ngIf="needPasswordConfirm" (valueChange)="onInput()"
-                      [(value)]="password"></jigsaw-input>
-        <jigsaw-input *ngIf="needUserNameConfirm" (valueChange)="onInput()"
-                      [(value)]="userName"></jigsaw-input>
+        <span>Enter your password to confirm:</span>
+        <jigsaw-input (valueChange)="onInput()" [(value)]="password"></jigsaw-input>
       </div>
     </jigsaw-dialog>
   `,
@@ -46,22 +44,16 @@ type PasswordInfo = {
 })
 export class ConfirmDialog extends DialogBase implements AfterContentInit {
   @ViewChild(JigsawDialog) dialog: JigsawDialog;
-  @ViewChildren(JigsawInput) inputs: QueryList<JigsawInput>;
+  @ViewChild(JigsawInput) input: JigsawInput;
   password: string;
-  userName: string;
-  needPasswordConfirm: boolean = true;
-  needUserNameConfirm: boolean = false;
   message: string = 'Please process with caution.';
 
   buttons: ButtonInfo[] = [
-    {label: 'OK', type: 'warning', disabled: true},
-    {label: 'Cancel'},
+    {label: 'OK', type: 'warning', disabled: true}, {label: 'Cancel'},
   ];
 
-  set initData(value: any) {
-    this.needPasswordConfirm = value.needPasswordConfirm;
-    this.needUserNameConfirm = value.needUserNameConfirm;
-    this.message = this.needPasswordConfirm ?
+  set initData(value: ConfirmType) {
+    this.message = value == ConfirmType.changePrivateKey ?
       'You are about to change your private key, which may make your in-using badges to be unavailable.' :
       'You are about to delete your account, which will remove everything and will NOT be recoverable.';
   }
@@ -72,13 +64,11 @@ export class ConfirmDialog extends DialogBase implements AfterContentInit {
   }
 
   onInput() {
-    setTimeout(() => this.buttons[0].disabled = !(this.needPasswordConfirm ? this.password : this.userName));
+    setTimeout(() => this.buttons[0].disabled = !this.password);
   }
 
   ngAfterContentInit() {
-    setTimeout(() => {
-      this.inputs.forEach(input => input.focus());
-    }, 100);
+    setTimeout(() => this.input.focus(), 100);
   }
 }
 
@@ -88,22 +78,15 @@ export class ConfirmDialog extends DialogBase implements AfterContentInit {
 export class AccountComponent {
   errorMessage = '';
 
+  constructor(private _httpClient: HttpClient, private _ps: PopupService, public authService: AuthService) {
+  }
+
   changePasswordDone = false;
   changePasswordClass = {
     'fa': true, 'fa-check': false, 'fa-times': false,
     'change-pwd-success': true, 'change-pwd-failed': false
   };
   changePasswordResult = '';
-
-  changeKeyDone = false;
-  changeKeyClass = {
-    'fa': true, 'fa-check': false, 'fa-times': false,
-    'change-pwd-success': true, 'change-pwd-failed': false
-  };
-  changeKeyResult = '';
-
-  constructor(private _httpClient: HttpClient, private _ps: PopupService, public authService: AuthService) {
-  }
 
   changePassword(value: PasswordInfo) {
     if (value.newPassword != value.confirm) {
@@ -129,14 +112,20 @@ export class AccountComponent {
     });
   }
 
+  changeKeyDone = false;
+  changeKeyClass = {
+    'fa': true, 'fa-check': false, 'fa-times': false,
+    'change-pwd-success': true, 'change-pwd-failed': false
+  };
+  changeKeyResult = '';
+
   changePrivateKey() {
     this.changeKeyDone = false;
     if (this.authService.password) {
       this.authService.changeAccountInfo({password: this.authService.password, changePrivateKey: true})
         .subscribe(result => this.onChangePrivateKeyResult(result));
     } else {
-      const popupInfo: PopupInfo = this._ps.popup(ConfirmDialog, {modal: true},
-        {needPasswordConfirm: true, needUserNameConfirm: false});
+      const popupInfo: PopupInfo = this._ps.popup(ConfirmDialog, {modal: true}, ConfirmType.changePrivateKey);
       popupInfo.answer.subscribe(button => {
         if (button && button.label == 'OK' && !button.disabled) {
           this.authService.changeAccountInfo({password: popupInfo.instance.password, changePrivateKey: true})
@@ -163,5 +152,46 @@ export class AccountComponent {
     if (isSuccess) {
       this.authService.privateKey = result.detail;
     }
+  }
+
+  changeDescDone = false;
+  changeDescClass = {
+    'fa': true, 'fa-check': false, 'fa-times': false,
+    'change-pwd-success': true, 'change-pwd-failed': false
+  };
+  changeDescResult = '';
+
+  changeDescription(newDescription: string) {
+    this.changeDescDone = false;
+    this.authService.changeAccountInfo({description: newDescription})
+      .subscribe(result => {
+        this.changeDescDone = true;
+        const isSuccess = result.error == 0;
+        this.changeDescClass['fa-times'] = !isSuccess;
+        this.changeDescClass['change-pwd-failed'] = !isSuccess;
+        this.changeDescClass['fa-check'] = isSuccess;
+        this.changeDescClass['change-pwd-success'] = isSuccess;
+        this.changeDescResult = isSuccess ? 'successful' : 'failed, detail: ' + result.detail;
+        if (isSuccess) {
+          this.authService.description = newDescription;
+        }
+      });
+  }
+
+  deleteAccount() {
+    const popupInfo: PopupInfo = this._ps.popup(ConfirmDialog, {modal: true}, ConfirmType.deleteAccount);
+    popupInfo.answer.subscribe(button => {
+      if (button && button.label == 'OK' && !button.disabled) {
+        this.authService.deleteAccount(popupInfo.instance.password)
+          .subscribe(result => {
+            if (result.error == 0) {
+              alert('done');
+            } else {
+              alert('unable to delete your account');
+            }
+          });
+      }
+      popupInfo.dispose();
+    });
   }
 }

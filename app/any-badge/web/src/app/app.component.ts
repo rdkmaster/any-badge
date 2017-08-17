@@ -1,7 +1,6 @@
 import {Component, OnInit, Renderer2, ViewContainerRef} from '@angular/core';
 import {AuthService} from "./services/auth.service";
 import {Router} from "@angular/router";
-import {Observable} from "rxjs/Observable";
 import {PopupInfo, PopupService} from "@rdkmaster/jigsaw";
 
 @Component({

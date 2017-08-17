@@ -21,7 +21,7 @@ import {AuthService} from "../services/auth.service";
   styles: [`
     .container {
       width: 980px;
-      margin: 60px auto 0 auto;
+      margin: 40px auto 0 auto;
       text-align: center;
     }
     

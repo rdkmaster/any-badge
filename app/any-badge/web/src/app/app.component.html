@@ -9,7 +9,7 @@
     <div #menuDocker *ngIf="authService.isLoggedIn"
          (mouseenter)="showMenu(menu, menuDocker)"
          (mouseleave)="hideMenuLater()">
-      <jigsaw-tag color="coral">{{authService.loggedInUser}}</jigsaw-tag>
+      <jigsaw-tag color="coral">{{authService.nickName}}</jigsaw-tag>
       <i class="fa fa-angle-down" style="cursor: pointer" aria-hidden="true"></i>
     </div>
   </span>

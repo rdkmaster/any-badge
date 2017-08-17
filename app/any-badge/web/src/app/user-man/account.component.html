@@ -1,9 +1,10 @@
-<div class="container">
+<div class="container" jigsawScrollBar scrollBarAxis="y" [scrollBarSnapAmount]="10" [scrollBarScrollAmount]="80">
   <div class="settings">
     <h3>Private key</h3>
     <p>Change the private key will protect your badges from the unintentional or intentional being modified.</p>
     <p><b>Notice</b>: process with caution! You have to change every url of the in-using badges too.</p>
     <div>
+      <label>Current Private Key</label>
       <jigsaw-input [disabled]="true" [clearable]="false" [value]="authService.privateKey"></jigsaw-input>
       <jigsaw-button colorType="danger" (click)="changePrivateKey()"
                      jigsawTooltip="Notice: process with caution!<br>You have to change every url of the in-using badges too.">
@@ -21,7 +22,7 @@
       <form #form="ngForm" (ngSubmit)="changePassword(form.value)">
         <div class="form-field">
           <label>Old Password *</label>
-          <jigsaw-input width="250px" name="password" ngModel required
+          <jigsaw-input name="password" ngModel required
                         minlength="6" maxlength="20" #password="ngModel">
           </jigsaw-input>
           <p [hidden]="password.valid || password.pristine || password.touched" class="error">
@@ -30,7 +31,7 @@
         </div>
         <div class="form-field">
           <label>New Password *</label>
-          <jigsaw-input width="250px" name="newPassword" ngModel required
+          <jigsaw-input name="newPassword" ngModel required
                         minlength="6" maxlength="20" #newPassword="ngModel">
           </jigsaw-input>
           <p [hidden]="newPassword.valid || newPassword.pristine || newPassword.touched" class="error">
@@ -39,7 +40,7 @@
         </div>
         <div class="form-field">
           <label>Confirm Password *</label>
-          <jigsaw-input width="250px" name="confirm" ngModel required
+          <jigsaw-input name="confirm" ngModel required
                         minlength="6" maxlength="20" #confirm="ngModel">
           </jigsaw-input>
           <p [hidden]="confirm.valid || confirm.pristine || confirm.touched" class="error">
@@ -62,12 +63,27 @@
       </form>
     </div>
   </div>
+  <div class="settings">
+    <h3>Change Description</h3>
+    <p>How do you describe yourself?</p>
+    <div>
+      <label>Current Description</label>
+      <jigsaw-input #descInput [value]="authService.description"></jigsaw-input>
+      <jigsaw-button (click)="changeDescription(descInput.value)">
+        Change
+      </jigsaw-button>
+      <span [hidden]="!changeDescDone">
+        <i [ngClass]="changeDescClass" style="font-size: 16px;"></i>
+        Change description {{changeDescResult}}
+      </span>
+    </div>
+  </div>
   <div class="settings dangerous">
     <h3 class="">Delete your account</h3>
     <p><b>Notice</b>: process with extreme caution! This action will remove everything in your account,</p>
     <p>and all of your badges will be disabled, and this action is NOT recoverable.</p>
     <div>
-      <jigsaw-button colorType="danger">I knew, just do it.</jigsaw-button>
+      <jigsaw-button colorType="danger" (click)="deleteAccount()">I knew, just do it.</jigsaw-button>
     </div>
   </div>
 </div>
@@ -75,7 +91,8 @@
 <style>
   .container {
     width: 980px;
-    margin: 60px auto 0 auto;
+    height: calc(100vh - 126px);
+    margin: 0 auto 0 auto;
     color: #fff !important;
   }
 
@@ -99,7 +116,7 @@
 
   jigsaw-input {
     color: #444;
-    width: 300px;
+    width: 260px;
     margin-right: 12px;
   }
 

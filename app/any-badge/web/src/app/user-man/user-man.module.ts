@@ -4,7 +4,7 @@ import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {FormsModule} from "@angular/forms";
 import {
   JigsawButtonModule, JigsawCheckBoxModule, JigsawDialogModule, JigsawInputModule,
-  JigsawTooltipModule, PopupService
+  JigsawTooltipModule, PopupService, JigsawScrollBarModule
 } from "@rdkmaster/jigsaw";
 import {LoginRoutingModule} from "./user-man-routing.module";
 import {LoginComponent} from "./login.component";
@@ -16,7 +16,7 @@ import {AccountComponent, ConfirmDialog} from "./account.component";
   imports: [
     CommonModule, HttpClientModule, LoginRoutingModule, FormsModule,
     JigsawInputModule, JigsawButtonModule, JigsawCheckBoxModule, JigsawTooltipModule,
-    JigsawDialogModule
+    JigsawDialogModule, JigsawScrollBarModule
   ],
   declarations: [LoginComponent, SignUpComponent, AccountComponent, ConfirmDialog],
   providers: [HttpClient, AuthService, PopupService],

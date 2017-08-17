@@ -76,7 +76,7 @@
       </div>
     </form>
     <div *ngIf="authService.isLoggedIn && !waitingForBadge">
-      <p class="text-message">It seems that <b>{{authService.loggedInUser}}</b> has logged in,
+      <p class="text-message">It seems that <b>{{authService.nickName}}</b> has logged in,
         you can <a routerLink="/">go to the main page</a> to explore Jigsaw Any Badge with this accoun,
         or <a (click)="authService.logout()">logout</a> this account if it is not yours.
       </p>
@@ -86,12 +86,11 @@
 <style>
   .view {
     width: 100%;
-    height: calc(100vh - 82px);
   }
 
   .panel {
     float: right;
-    margin: 110px 200px 10px 0;
+    margin: 5% 200px 10px 0;
     padding: 24px;
     line-height: 20px;
     background-color: #fff;

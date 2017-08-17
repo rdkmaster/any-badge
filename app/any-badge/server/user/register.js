@@ -4,10 +4,12 @@ id int(4) not null primary key auto_increment,
 name char(64) not null unique,
 nick_name char(32) not null,
 password char(20) not null,
+private_key char(35) not null,
 description text(256));
 */
 
 (function() {
+    var genPrivateKey = require('$svr/utils.js').genPrivateKey;
     return {
         post: function(req, s, headers) {
             req.name = req.name ? req.name.trim() : '';
@@ -24,9 +26,12 @@ description text(256));
             }
 
             req.description = req.description ? req.description.trim() : 'This guy is lazy...';
+            var privateKey = genPrivateKey();
+
             //Todo: sql injection protect.
-            r = Data.update('insert into user (name, nick_name, password, description) values(' +
-                '"' + req.name + '", "' + req.nickName + '", "' + req.password + '", "' + req.description + '")');
+            r = Data.update('insert into user (name, nick_name, password, private_key, description) values(' +
+                '"' + req.name + '", "' + req.nickName + '", "' + req.password + '", "' + privateKey +
+                '", "' + req.description + '")');
             if (r.hasOwnProperty('error')) {
                 return {error:452, detail: 'create user error, detail: ' + r.error};
             }

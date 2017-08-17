@@ -26,10 +26,6 @@ export class SignUpComponent extends UserManBase {
           return;
         }
 
-        // Get the redirect URL from our auth service
-        // If no redirect has been set, use the default
-        let redirect = this.authService.redirectUrl ? this.authService.redirectUrl : '/login';
-
         // Set our navigation extras object
         // that passes on our global query params and fragment
         let navigationExtras: NavigationExtras = {
@@ -37,7 +33,7 @@ export class SignUpComponent extends UserManBase {
           preserveFragment: true
         };
         // Redirect the user
-        this.router.navigate([redirect], navigationExtras);
+        this.router.navigate(['/login'], navigationExtras);
       });
   }
 }

@@ -52,10 +52,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    const result = this.authService.checkLoginStatus();
-    if (result instanceof Observable) {
-      result.subscribe();
-    }
+    this.authService.checkLoginStatus();
   }
 }
 

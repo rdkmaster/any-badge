@@ -22,7 +22,7 @@ export abstract class UserManBase {
   public errorMessage: string = '';
   public waitingForBadge: boolean = false;
 
-  //login view property, to prevent IDE mis-error message.
+  //login view property, to prevent mis-error message from WebStorm.
   public remember:boolean = true;
   public clearUserFromCookie(checked: boolean):void {
   }

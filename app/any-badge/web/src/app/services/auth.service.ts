@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
+import {Router} from "@angular/router";
 
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
@@ -9,33 +10,42 @@ import 'rxjs/add/operator/delay';
 import {HttpResult} from "../utils/typings";
 import {CookieUtils} from "../utils/utils";
 
+export type AccountInfo = {
+  password: string, newPassword?: string, description?: string, changePrivateKey?: boolean
+}
 
 @Injectable()
 export class AuthService {
-  constructor(private _http: HttpClient) {
+  constructor(private _http: HttpClient, private _router: Router) {
   }
 
   public isLoggedIn = false;
-  public loggedInUser:string = 'unknown user';
+  public loggedInUser: string = 'unknown user';
+  public privateKey:string = 'invalid private key';
+  public password:string = '';
 
-  private _loginObservable: Observable<any>;
+  private _promise: Promise<boolean>;
 
-  // store the URL so we can redirect after logging in
-  public redirectUrl: string;
-
-  public checkLoginStatus():Observable<boolean>|boolean {
+  public checkLoginStatus(): Promise<boolean> | boolean {
+    let p = new Promise<boolean>((resolve, reject) => {
+      resolve(true);
+      reject({});
+    });
     if (this.isLoggedIn) {
       return true;
     }
-    if (!this._loginObservable) {
-      this._loginObservable = this._http.get('/rdk/service/app/any-badge/server/user/login')
-        .map((result: HttpResult) => {
-          this.isLoggedIn = result.error == 0;
-          this.loggedInUser = this.isLoggedIn ? result.detail : 'unknown user';
-          return this.isLoggedIn;
-        });
+    if (!this._promise) {
+      this._promise = new Promise<boolean>(resolve => {
+        this._http.get<HttpResult>('/rdk/service/app/any-badge/server/user/login')
+          .subscribe(result => {
+            this.isLoggedIn = result.error == 0;
+            this.loggedInUser = this.isLoggedIn ? result.detail : 'unknown user';
+            this.privateKey = this.isLoggedIn ? result.extra : 'unknown private key';
+            resolve(this.isLoggedIn);
+          });
+      });
     }
-    return this._loginObservable;
+    return this._promise;
   }
 
   public login(name: string, password: string): Observable<string> {
@@ -46,6 +56,9 @@ export class AuthService {
       if (this.isLoggedIn) {
         CookieUtils.put('session', result.detail);
         this.loggedInUser = name;
+        this.privateKey = result.extra;
+        //save the password for further usage.
+        this.password = password;
       }
 
       return !this.isLoggedIn ? result.detail : '';
@@ -54,14 +67,17 @@ export class AuthService {
 
   public logout(): void {
     const url = '/rdk/service/app/any-badge/server/user/logout';
-    this._http.post(url, {}).subscribe((result: HttpResult) => {
-      CookieUtils.del('session');
-      this.loggedInUser = 'unknown user';
-      if (result.error > 0) {
-        console.error(result);
-      }
-    });
+    this._http.post<HttpResult>(url, {})
+      .subscribe(result => {
+        CookieUtils.del('session');
+        this.loggedInUser = 'unknown user';
+        if (result.error > 0) {
+          console.error(result);
+        }
+      });
     this.isLoggedIn = false;
+
+    this._router.navigate(['/']);
   }
 
   public signUp(user: string, password: string, nick: string = '', description: string = ''): Observable<string> {
@@ -71,8 +87,12 @@ export class AuthService {
 
     const url = '/rdk/service/app/any-badge/server/user/register';
     const param: any = {
-      name: user, password: password, nickName: nick, description:description
+      name: user, password: password, nickName: nick, description: description
     };
-    return this._http.post(url, param).map((result: HttpResult) => result.error > 0 ? result.detail : '');
+    return this._http.post<HttpResult>(url, param).map(result => result.error > 0 ? result.detail : '');
+  }
+
+  public changeAccountInfo(info: AccountInfo): Observable<HttpResult> {
+    return this._http.post<HttpResult>('/rdk/service/app/any-badge/server/user/account-man', info);
   }
 }

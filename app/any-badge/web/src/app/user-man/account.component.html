@@ -1,0 +1,130 @@
+<div class="container">
+  <div class="settings">
+    <h3>Private key</h3>
+    <p>Change the private key will protect your badges from the unintentional or intentional being modified.</p>
+    <p><b>Notice</b>: process with caution! You have to change every url of the in-using badges too.</p>
+    <div>
+      <jigsaw-input [disabled]="true" [clearable]="false" [value]="authService.privateKey"></jigsaw-input>
+      <jigsaw-button colorType="danger" (click)="changePrivateKey()"
+                     jigsawTooltip="Notice: process with caution!<br>You have to change every url of the in-using badges too.">
+        Change
+      </jigsaw-button>
+      <span [hidden]="!changeKeyDone">
+        <i [ngClass]="changeKeyClass" style="font-size: 16px;"></i>
+        Change private key {{changeKeyResult}}
+      </span>
+    </div>
+  </div>
+  <div class="settings">
+    <h3>Change password</h3>
+    <div>
+      <form #form="ngForm" (ngSubmit)="changePassword(form.value)">
+        <div class="form-field">
+          <label>Old Password *</label>
+          <jigsaw-input width="250px" name="password" ngModel required
+                        minlength="6" maxlength="20" #password="ngModel">
+          </jigsaw-input>
+          <p [hidden]="password.valid || password.pristine || password.touched" class="error">
+            Tip: length of the password should be between 6 ~ 20.
+          </p>
+        </div>
+        <div class="form-field">
+          <label>New Password *</label>
+          <jigsaw-input width="250px" name="newPassword" ngModel required
+                        minlength="6" maxlength="20" #newPassword="ngModel">
+          </jigsaw-input>
+          <p [hidden]="newPassword.valid || newPassword.pristine || newPassword.touched" class="error">
+            Tip: length of the password should be between 6 ~ 20.
+          </p>
+        </div>
+        <div class="form-field">
+          <label>Confirm Password *</label>
+          <jigsaw-input width="250px" name="confirm" ngModel required
+                        minlength="6" maxlength="20" #confirm="ngModel">
+          </jigsaw-input>
+          <p [hidden]="confirm.valid || confirm.pristine || confirm.touched" class="error">
+            Tip: length of the password should be between 6 ~ 20.
+          </p>
+        </div>
+        <div class="form-field">
+          <p class="error">{{errorMessage}}</p>
+        </div>
+        <div class="form-field">
+          <label></label>
+          <button jigsaw-button type="submit" [disabled]="!form.valid">
+            Change Password
+          </button>
+          <span [hidden]="!changePasswordDone">
+                <i [ngClass]="changePasswordClass" style="font-size: 16px;"></i>
+                Change password {{changePasswordResult}}!
+          </span>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="settings dangerous">
+    <h3 class="">Delete your account</h3>
+    <p><b>Notice</b>: process with extreme caution! This action will remove everything in your account,</p>
+    <p>and all of your badges will be disabled, and this action is NOT recoverable.</p>
+    <div>
+      <jigsaw-button colorType="danger">I knew, just do it.</jigsaw-button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .container {
+    width: 980px;
+    margin: 60px auto 0 auto;
+    color: #fff !important;
+  }
+
+  .settings {
+    margin-bottom: 36px;
+  }
+
+  .settings h3 {
+    border-bottom: 1px #e1e4e8 solid;
+    padding-bottom: 6px;
+    margin-bottom: 18px;
+  }
+
+  .settings > div {
+    margin-top: 12px;
+  }
+
+  .dangerous h3 {
+    border-bottom: 2px #ff3f3c solid;
+  }
+
+  jigsaw-input {
+    color: #444;
+    width: 300px;
+    margin-right: 12px;
+  }
+
+  label {
+    width: 128px;
+    text-align: right;
+    padding-right: 12px;
+  }
+
+  .form-field {
+    padding-bottom: 6px;
+  }
+
+  .error {
+    color: red;
+    font-size: 10px;
+    font-weight: normal;
+    padding-left: 90px;
+  }
+
+  .change-pwd-success {
+    color: #00ff00;
+  }
+
+  .change-pwd-failed {
+    color: red;
+  }
+</style>

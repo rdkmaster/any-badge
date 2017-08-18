@@ -8,7 +8,7 @@ import {AuthService} from "../services/auth.service";
         Welcome to Jigsaw Any Badge
       </h1>
       <h2>
-        Put any badges to your github projects
+        Put any badges to your projects in seconds
       </h2>
       <div class="links">
         <jigsaw-button width="130px" routerLink="/badges" colorType="danger" preSize="large">

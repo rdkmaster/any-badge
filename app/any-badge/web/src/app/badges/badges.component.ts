@@ -12,6 +12,7 @@ import {
 } from "@rdkmaster/jigsaw";
 import {HttpResult} from "../utils/typings";
 import {Utils} from "../utils/utils";
+import {CopyBadgeComponent} from "./copy-badge.component";
 
 type SharedInfo = { tooltip: string, svgUrl: string, bgColor: { 'background-color': string } };
 
@@ -22,13 +23,13 @@ const shared: SharedInfo[] = [];
   template: `
     <span [ngStyle]="shared[row]?.bgColor" [jigsawTooltip]="shared[row]?.tooltip">
       <a (click)="saveBadge(tableData, row)">
-        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+        <i class="fa fa-floppy-o"></i>
       </a>
       <a (click)="removeBadge(tableData, row)">
-        <i class="fa fa-trash" aria-hidden="true"></i>
+        <i class="fa fa-trash"></i>
       </a>
       <a (click)="popCopyDialog(tableData, row)">
-        <i class="fa fa-copy" aria-hidden="true"></i>
+        <i class="fa fa-copy"></i>
       </a>
     </span>
   `,
@@ -109,7 +110,7 @@ export class OperationTableCell extends TableCellRenderer {
   }
 
   public popCopyDialog(tableData: TableData, row: number) {
-
+    this._popupService.popup(CopyBadgeComponent);
   }
 }
 

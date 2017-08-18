@@ -1,31 +1,31 @@
 <div class="title">
   <div class="logo">
     <h1><a routerLink="/">Jigsaw Any Badge</a></h1>
-    <p>Put any badges to your github project.</p>
+    <p>Put any badges to your projects in seconds.</p>
   </div>
 
   <div class="nav-bar">
     <ul class="nav navbar-nav navbar-right">
       <li><a routerLink="/guides/getting-started">
-        <i class="fa fa-coffee" aria-hidden="true"></i> Getting started
+        <i class="fa fa-coffee"></i> Getting started
       </a></li>
       <li><a routerLink="/guides/features">
-        <i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Features
+        <i class="fa fa-thumbs-o-up"></i> Features
       </a></li>
       <li><a routerLink="/badges">
-        <i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Badges
+        <i class="fa fa-thumbs-o-up"></i> Badges
       </a></li>
       <li><a href="https://github.com/rdkmaster/jigsaw" target="_blank">
-        <i class="fa fa-github" aria-hidden="true"></i> Jigsaw七巧板
+        <i class="fa fa-github"></i> Jigsaw七巧板
       </a></li>
       <li><a href="https://github.com/rdkmaster/any-badge" target="_blank">
-        <i class="fa fa-github" aria-hidden="true"></i> Github
+        <i class="fa fa-github"></i> Github
       </a></li>
       <li *ngIf="!authService.isLoggedIn"><a routerLink="/login" routerLinkActive="active">Login / Sign Up</a></li>
       <li *ngIf="authService.isLoggedIn" (mouseenter)="showMenu(menu, menuDocker)" (mouseleave)="hideMenuLater()"><a>
-        <i class="fa fa-user-o" aria-hidden="true"></i>
+        <i class="fa fa-user-o"></i>
         <jigsaw-tag color="#ec6d6d">{{authService.nickName}}
-          <i #menuDocker class="fa fa-angle-down" style="cursor: pointer" aria-hidden="true"></i>
+          <i #menuDocker class="fa fa-angle-down" style="cursor: pointer"></i>
         </jigsaw-tag>
       </a></li>
     </ul>

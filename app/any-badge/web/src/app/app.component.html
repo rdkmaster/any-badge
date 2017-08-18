@@ -6,11 +6,14 @@
 
   <div class="nav-bar">
     <ul class="nav navbar-nav navbar-right">
-      <li><a href="./guides/getting-started.html">
+      <li><a routerLink="/guides/getting-started">
         <i class="fa fa-coffee" aria-hidden="true"></i> Getting started
       </a></li>
-      <li><a href="./guides/features.html">
+      <li><a routerLink="/guides/features">
         <i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Features
+      </a></li>
+      <li><a routerLink="/badges">
+        <i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Badges
       </a></li>
       <li><a href="https://github.com/rdkmaster/jigsaw" target="_blank">
         <i class="fa fa-github" aria-hidden="true"></i> Jigsaw七巧板
@@ -27,19 +30,6 @@
       </a></li>
     </ul>
   </div>
-
-  <!--<span class="account">-->
-  <!--<div *ngIf="!authService.isLoggedIn">-->
-  <!--<a routerLink="/login" routerLinkActive="active">Login</a> or-->
-  <!--<a routerLink="/sign-up" routerLinkActive="active">Sign Up</a>-->
-  <!--</div>-->
-  <!--<div *ngIf="authService.isLoggedIn"-->
-  <!--(mouseenter)="showMenu(menu, menuDocker)"-->
-  <!--(mouseleave)="hideMenuLater()">-->
-  <!--<jigsaw-tag color="#ec6d6d">{{authService.nickName}}</jigsaw-tag>-->
-  <!---->
-  <!--</div>-->
-  <!--</span>-->
 </div>
 <router-outlet></router-outlet>
 

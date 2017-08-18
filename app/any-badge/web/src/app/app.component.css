@@ -1,5 +1,6 @@
 .title {
   height: 96px;
+  min-width: 985px;
   margin: 12px 12px 6px 12px;
   color: #fff;
 }
@@ -27,7 +28,7 @@
 
 .nav-bar a, .nav-bar a:hover, .nav-bar a:focus {
   margin-top: 6px;
-  font-size: 16px;
+  font-size: 14px;
   background: transparent;
   color: #fff;
   opacity: 0.8;

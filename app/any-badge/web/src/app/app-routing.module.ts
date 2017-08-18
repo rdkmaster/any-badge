@@ -12,6 +12,9 @@ const appRoutes: Routes = [
     path: 'badges', loadChildren: 'app/badges/badges.module#BadgesModule',
     canLoad: [AuthGuard]
   },
+  {
+    path: 'guides', loadChildren: 'app/guides/guide.module#GuideModule',
+  },
   { path: '', component: FrontPageComponent },
   { path: '**', component: PageNotFoundComponent }
 ];

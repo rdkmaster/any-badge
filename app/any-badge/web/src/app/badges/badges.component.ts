@@ -167,7 +167,7 @@ export class BadgeListComponent implements OnInit {
     },
     {
       target: 'subject',
-      width: '10%',
+      width: '15%',
       cell: {
         editable: true,
         editorRenderer: SubjectEditor,
@@ -175,7 +175,7 @@ export class BadgeListComponent implements OnInit {
     },
     {
       target: 'status',
-      width: '10%',
+      width: '15%',
       cell: {
         editable: true,
         editorRenderer: TableCellEditor,
@@ -183,7 +183,7 @@ export class BadgeListComponent implements OnInit {
     },
     {
       target: 'color',
-      width: '10%',
+      width: '15%',
       cell: {
         editable: true,
         editorRenderer: TableCellEditor,
@@ -191,7 +191,7 @@ export class BadgeListComponent implements OnInit {
     },
     {
       target: 'description',
-      width: '30%',
+      width: '15%',
       cell: {
         editable: true,
         editorRenderer: TableCellEditor,
@@ -232,7 +232,7 @@ export class BadgeListComponent implements OnInit {
       svgUrl: '',
       bgColor: {'background-color': '#F6EBBC'}
     });
-    this.badges.data.push(['', '< new badge >', '< new badge >', 'good', 'a awesome badge']);
+    this.badges.data.push(['', '< new badge >', '< new badge >', 'good', 'an awesome badge']);
     this.badges.refresh();
   }
 

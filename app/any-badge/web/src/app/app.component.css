@@ -4,42 +4,50 @@
   color: #fff;
 }
 
-h1 {
+.logo {
+  display: inline-block;
+}
+
+.logo h1 {
   color: #fff;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 40px;
-}
-
-p {
-  margin-left: 128px;
-}
-
-.logo {
-  display: inline-block;
   margin-bottom: 12px;
 }
 
-.link {
-  float: right;
-  margin-top: -73px;
-  font-size: 16px;
+.logo p {
+  margin-left: 128px;
 }
 
-.link div {
+.nav-bar {
   display: inline-block;
-  margin-top: 12px;
+  float: right;
+  margin-right: 6px
 }
 
-a {
-  color: coral;
-  font-weight: bold;
+.nav-bar a, .nav-bar a:hover, .nav-bar a:focus {
+  margin-top: 6px;
+  font-size: 16px;
+  background: transparent;
+  color: #fff;
+  opacity: 0.8;
   text-decoration: none;
+  -o-transition: all .3s;
+  -moz-transition: all .3s;
+  -webkit-transition: all .3s;
+  -ms-transition: all .3s;
+  transition: all .3s;
+}
+
+.nav-bar a:hover {
+  border-bottom: 2px solid #ec6d6d;
 }
 
 .menu {
   background-color: #fff;
   padding: 4px 4px 4px 2px;
   line-height: 32px;
+  opacity: 0.9;
 
   box-shadow: 0 0 10px rgba(0, 0, 0, .5);
   -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, .5);

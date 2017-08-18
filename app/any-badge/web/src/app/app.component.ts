@@ -9,7 +9,7 @@ import {PopupInfo, PopupService} from "@rdkmaster/jigsaw";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  constructor(public authService: AuthService, private _router: Router, public popupService: PopupService,
+  constructor(public authService: AuthService, private _router: Router, private _popupService: PopupService,
               public viewContainerRef: ViewContainerRef, public renderer: Renderer2) {
   }
 
@@ -25,8 +25,8 @@ export class AppComponent implements OnInit {
     if (this._popupInfo) {
       this._popupInfo.dispose();
     }
-    this._popupInfo = this.popupService.popup(menu, {
-      modal: false, pos: menuDocker, posOffset: {top: 30}
+    this._popupInfo = this._popupService.popup(menu, {
+      modal: false, pos: menuDocker, posOffset: {top: 36, right: 15}
     });
   }
 

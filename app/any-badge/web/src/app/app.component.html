@@ -1,18 +1,45 @@
 <div class="title">
-  <h1 class="logo"><a routerLink="/">Jigsaw Any Badge</a></h1>
-  <p>Put any badges to your github project.</p>
-  <span class="link">
-    <div *ngIf="!authService.isLoggedIn">
-      <a routerLink="/login" routerLinkActive="active">Login</a> or
-      <a routerLink="/sign-up" routerLinkActive="active">Sign Up</a>
-    </div>
-    <div #menuDocker *ngIf="authService.isLoggedIn"
-         (mouseenter)="showMenu(menu, menuDocker)"
-         (mouseleave)="hideMenuLater()">
-      <jigsaw-tag color="coral">{{authService.nickName}}</jigsaw-tag>
-      <i class="fa fa-angle-down" style="cursor: pointer" aria-hidden="true"></i>
-    </div>
-  </span>
+  <div class="logo">
+    <h1><a routerLink="/">Jigsaw Any Badge</a></h1>
+    <p>Put any badges to your github project.</p>
+  </div>
+
+  <div class="nav-bar">
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="./guides/getting-started.html">
+        <i class="fa fa-coffee" aria-hidden="true"></i> Getting started
+      </a></li>
+      <li><a href="./guides/features.html">
+        <i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Features
+      </a></li>
+      <li><a href="https://github.com/rdkmaster/jigsaw" target="_blank">
+        <i class="fa fa-github" aria-hidden="true"></i> Jigsaw七巧板
+      </a></li>
+      <li><a href="https://github.com/rdkmaster/any-badge" target="_blank">
+        <i class="fa fa-github" aria-hidden="true"></i> Github
+      </a></li>
+      <li *ngIf="!authService.isLoggedIn"><a routerLink="/login" routerLinkActive="active">Login / Sign Up</a></li>
+      <li *ngIf="authService.isLoggedIn" (mouseenter)="showMenu(menu, menuDocker)" (mouseleave)="hideMenuLater()"><a>
+        <i class="fa fa-user-o" aria-hidden="true"></i>
+        <jigsaw-tag color="#ec6d6d">{{authService.nickName}}
+          <i #menuDocker class="fa fa-angle-down" style="cursor: pointer" aria-hidden="true"></i>
+        </jigsaw-tag>
+      </a></li>
+    </ul>
+  </div>
+
+  <!--<span class="account">-->
+  <!--<div *ngIf="!authService.isLoggedIn">-->
+  <!--<a routerLink="/login" routerLinkActive="active">Login</a> or-->
+  <!--<a routerLink="/sign-up" routerLinkActive="active">Sign Up</a>-->
+  <!--</div>-->
+  <!--<div *ngIf="authService.isLoggedIn"-->
+  <!--(mouseenter)="showMenu(menu, menuDocker)"-->
+  <!--(mouseleave)="hideMenuLater()">-->
+  <!--<jigsaw-tag color="#ec6d6d">{{authService.nickName}}</jigsaw-tag>-->
+  <!---->
+  <!--</div>-->
+  <!--</span>-->
 </div>
 <router-outlet></router-outlet>
 

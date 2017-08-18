@@ -1,7 +1,7 @@
 import {NgModule} from "@angular/core";
 import {CommonModule} from "@angular/common";
-import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {FormsModule} from "@angular/forms";
+import {HttpModule} from "@angular/http";
 import {
   JigsawButtonModule, JigsawCheckBoxModule, JigsawDialogModule, JigsawInputModule,
   JigsawTooltipModule, PopupService, JigsawScrollBarModule
@@ -14,12 +14,12 @@ import {AccountComponent, ConfirmDialog} from "./account.component";
 
 @NgModule({
   imports: [
-    CommonModule, HttpClientModule, LoginRoutingModule, FormsModule,
+    CommonModule, HttpModule, LoginRoutingModule, FormsModule,
     JigsawInputModule, JigsawButtonModule, JigsawCheckBoxModule, JigsawTooltipModule,
     JigsawDialogModule, JigsawScrollBarModule
   ],
   declarations: [LoginComponent, SignUpComponent, AccountComponent, ConfirmDialog],
-  providers: [HttpClient, AuthService, PopupService],
+  providers: [AuthService, PopupService],
   entryComponents: [ConfirmDialog]
 })
 export class LoginModule {

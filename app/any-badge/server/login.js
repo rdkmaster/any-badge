@@ -34,14 +34,14 @@
 
             log('user:', req.name, ',', 'pwd:', req.password);
             Data.useDataSource('mysql_any_badge');
-            var r = Data.fetch('select nick_name,private_key,description from user where name="' +
+            var r = Data.fetch('select nick_name,private_key,description,id from user where name="' +
                 req.name + '" and password="' + req.password + '"');
             if (r.data.length == 0) {
                 return {error:453, detail: 'user not exist or bad password'};
             }
 
             var session = 'any-badge-session-' + randomString(16) + '-' + (+new Date);
-            Cache.aging.put(session, r.data[0][0], req.remember ? 99999999999999 : 30000);
+            Cache.aging.put(session, r.data[0][3], req.remember ? 99999999999999 : 30000);
 
             return  {
                         error: 0,

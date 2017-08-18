@@ -1,5 +1,4 @@
 import {AfterContentInit, Component, ViewChild} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
 import {ButtonInfo, DialogBase, JigsawDialog, JigsawInput, PopupInfo, PopupService} from "@rdkmaster/jigsaw";
 import {HttpResult} from "../utils/typings";
 import {AuthService} from "../services/auth.service";
@@ -78,13 +77,13 @@ export class ConfirmDialog extends DialogBase implements AfterContentInit {
 export class AccountComponent {
   errorMessage = '';
 
-  constructor(private _httpClient: HttpClient, private _ps: PopupService, public authService: AuthService) {
+  constructor(private _popupService: PopupService, public authService: AuthService) {
   }
 
   changePasswordDone = false;
   changePasswordClass = {
     'fa': true, 'fa-check': false, 'fa-times': false,
-    'change-pwd-success': true, 'change-pwd-failed': false
+    'action-success': true, 'action-failed': false
   };
   changePasswordResult = '';
 
@@ -100,64 +99,48 @@ export class AccountComponent {
       this.changePasswordDone = true;
       const isSuccess = result.error == 0;
       this.changePasswordClass['fa-times'] = !isSuccess;
-      this.changePasswordClass['change-pwd-failed'] = !isSuccess;
+      this.changePasswordClass['action-failed'] = !isSuccess;
       this.changePasswordClass['fa-check'] = isSuccess;
-      this.changePasswordClass['change-pwd-success'] = isSuccess;
+      this.changePasswordClass['action-success'] = isSuccess;
       this.changePasswordResult = isSuccess ? 'successful' : 'failed';
-
-      if (isSuccess) {
-        //save the password for further usage.
-        this.authService.password = value.password;
-      }
     });
   }
 
   changeKeyDone = false;
   changeKeyClass = {
     'fa': true, 'fa-check': false, 'fa-times': false,
-    'change-pwd-success': true, 'change-pwd-failed': false
+    'action-success': true, 'action-failed': false
   };
   changeKeyResult = '';
 
   changePrivateKey() {
     this.changeKeyDone = false;
-    if (this.authService.password) {
-      this.authService.changeAccountInfo({password: this.authService.password, changePrivateKey: true})
-        .subscribe(result => this.onChangePrivateKeyResult(result));
-    } else {
-      const popupInfo: PopupInfo = this._ps.popup(ConfirmDialog, {modal: true}, ConfirmType.changePrivateKey);
-      popupInfo.answer.subscribe(button => {
-        if (button && button.label == 'OK' && !button.disabled) {
-          this.authService.changeAccountInfo({password: popupInfo.instance.password, changePrivateKey: true})
-            .subscribe(result => {
-              if (result.error == 0) {
-                this.authService.password = popupInfo.instance.password;
-              }
-              this.onChangePrivateKeyResult(result);
-            });
-        }
-        popupInfo.dispose();
-      });
-    }
-  }
-
-  onChangePrivateKeyResult(result: HttpResult) {
-    this.changeKeyDone = true;
-    const isSuccess = result.error == 0;
-    this.changeKeyClass['fa-times'] = !isSuccess;
-    this.changeKeyClass['change-pwd-failed'] = !isSuccess;
-    this.changeKeyClass['fa-check'] = isSuccess;
-    this.changeKeyClass['change-pwd-success'] = isSuccess;
-    this.changeKeyResult = isSuccess ? 'successful' : 'failed, detail: ' + result.detail;
-    if (isSuccess) {
-      this.authService.privateKey = result.detail;
-    }
+    const popupInfo: PopupInfo = this._popupService.popup(
+      ConfirmDialog, {modal: true}, ConfirmType.changePrivateKey);
+    popupInfo.answer.subscribe(button => {
+      if (button && button.label == 'OK' && !button.disabled) {
+        this.authService.changeAccountInfo({password: popupInfo.instance.password, changePrivateKey: true})
+          .subscribe(result => {
+            this.changeKeyDone = true;
+            const isSuccess = result.error == 0;
+            this.changeKeyClass['fa-times'] = !isSuccess;
+            this.changeKeyClass['action-failed'] = !isSuccess;
+            this.changeKeyClass['fa-check'] = isSuccess;
+            this.changeKeyClass['action-success'] = isSuccess;
+            this.changeKeyResult = isSuccess ? 'successful' : 'failed, detail: ' + result.detail;
+            if (isSuccess) {
+              this.authService.privateKey = result.detail;
+            }
+          });
+      }
+      popupInfo.dispose();
+    });
   }
 
   changeDescDone = false;
   changeDescClass = {
     'fa': true, 'fa-check': false, 'fa-times': false,
-    'change-pwd-success': true, 'change-pwd-failed': false
+    'action-success': true, 'action-failed': false
   };
   changeDescResult = '';
 
@@ -168,9 +151,9 @@ export class AccountComponent {
         this.changeDescDone = true;
         const isSuccess = result.error == 0;
         this.changeDescClass['fa-times'] = !isSuccess;
-        this.changeDescClass['change-pwd-failed'] = !isSuccess;
+        this.changeDescClass['action-failed'] = !isSuccess;
         this.changeDescClass['fa-check'] = isSuccess;
-        this.changeDescClass['change-pwd-success'] = isSuccess;
+        this.changeDescClass['action-success'] = isSuccess;
         this.changeDescResult = isSuccess ? 'successful' : 'failed, detail: ' + result.detail;
         if (isSuccess) {
           this.authService.description = newDescription;
@@ -178,16 +161,24 @@ export class AccountComponent {
       });
   }
 
+  deleteAccountDone = false;
+  deleteAccountResult = '';
+
   deleteAccount() {
-    const popupInfo: PopupInfo = this._ps.popup(ConfirmDialog, {modal: true}, ConfirmType.deleteAccount);
+    this.deleteAccountDone = false;
+    const popupInfo: PopupInfo = this._popupService.popup(
+      ConfirmDialog, {modal: true}, ConfirmType.deleteAccount);
     popupInfo.answer.subscribe(button => {
       if (button && button.label == 'OK' && !button.disabled) {
         this.authService.deleteAccount(popupInfo.instance.password)
           .subscribe(result => {
+            this.deleteAccountDone = true;
             if (result.error == 0) {
-              alert('done');
+              alert('Everything in your Any Badge account has been removed, thanks for using Any Badge.\n' +
+                'We are looking forward to see you again later. Good luck and goodbye.');
+              this.authService.logout();
             } else {
-              alert('unable to delete your account');
+              this.deleteAccountResult = result.detail;
             }
           });
       }

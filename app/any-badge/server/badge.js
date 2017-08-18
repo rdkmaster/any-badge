@@ -23,6 +23,7 @@ description text(256));
             sql += ' and subject="' + req.subject + '";';
         }
 
+        log(sql);
         var r = Data.fetch(sql);
         for (var i = 0; i < r.data.length; i++) {
             r.data[i][1] = r.data[i][1];

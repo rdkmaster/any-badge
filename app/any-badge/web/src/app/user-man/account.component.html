@@ -25,7 +25,7 @@
           <jigsaw-input name="password" ngModel required
                         minlength="6" maxlength="20" #password="ngModel">
           </jigsaw-input>
-          <p [hidden]="password.valid || password.pristine || password.touched" class="error">
+          <p [hidden]="password.valid || password.pristine || password.touched" class="form-field-error">
             Tip: length of the password should be between 6 ~ 20.
           </p>
         </div>
@@ -34,7 +34,7 @@
           <jigsaw-input name="newPassword" ngModel required
                         minlength="6" maxlength="20" #newPassword="ngModel">
           </jigsaw-input>
-          <p [hidden]="newPassword.valid || newPassword.pristine || newPassword.touched" class="error">
+          <p [hidden]="newPassword.valid || newPassword.pristine || newPassword.touched" class="form-field-error">
             Tip: length of the password should be between 6 ~ 20.
           </p>
         </div>
@@ -43,12 +43,12 @@
           <jigsaw-input name="confirm" ngModel required
                         minlength="6" maxlength="20" #confirm="ngModel">
           </jigsaw-input>
-          <p [hidden]="confirm.valid || confirm.pristine || confirm.touched" class="error">
+          <p [hidden]="confirm.valid || confirm.pristine || confirm.touched" class="form-field-error">
             Tip: length of the password should be between 6 ~ 20.
           </p>
         </div>
         <div class="form-field">
-          <p class="error">{{errorMessage}}</p>
+          <p class="form-field-error">{{errorMessage}}</p>
         </div>
         <div class="form-field">
           <label></label>
@@ -84,6 +84,10 @@
     <p>and all of your badges will be disabled, and this action is NOT recoverable.</p>
     <div>
       <jigsaw-button colorType="danger" (click)="deleteAccount()">I knew, just do it.</jigsaw-button>
+      <span [hidden]="!deleteAccountDone">
+        <i class="fa fa-times action-failed" style="font-size: 16px;"></i>
+        Delete account failed, detail: {{deleteAccountResult}}
+      </span>
     </div>
   </div>
 </div>
@@ -130,18 +134,18 @@
     padding-bottom: 6px;
   }
 
-  .error {
+  .form-field-error {
     color: red;
     font-size: 10px;
     font-weight: normal;
     padding-left: 90px;
   }
 
-  .change-pwd-success {
+  .action-success {
     color: #00ff00;
   }
 
-  .change-pwd-failed {
+  .action-failed {
     color: red;
   }
 </style>

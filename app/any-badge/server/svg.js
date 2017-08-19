@@ -1,8 +1,8 @@
 (function() {
-    var checkOwner = require('$svr/utils.js').checkOwner;
+    var getOwner = require('$svr/utils.js').getOwner;
     var lengthInfo = {
         "a": 7, "b": 7, "c": 6, "d": 6, "e": 7, "f": 5, "g": 7, "h": 7, "i": 2, "j": 4, "k": 7, "l": 3,
-        "m": 11, "n": 7, "o": 6, "p": 7, "q": 7, "r": 4, "s": 5, "t": 5, "u": 7, "v": 6, "w": 9, "x": 7,
+        "m": 11, "n": 7, "o": 6, "p": 7, "q": 7, "r": 5, "s": 5, "t": 5, "u": 7, "v": 6, "w": 9, "x": 7,
         "y": 6, "z": 6, "A": 8, "B": 7, "C": 8, "D": 8, "E": 7, "F": 7, "G": 8, "H": 8, "I": 5, "J": 5,
         "K": 8, "L": 6, "M": 9, "N": 8, "O": 9, "P": 7, "Q": 8, "R": 8, "S": 7, "T": 7, "U": 8, "V": 8,
         "W": 10, "X": 8, "Y": 7, "Z": 7, "0": 8, "1": 7, "2": 7, "3": 7, "4": 7, "5": 7, "6": 7, "7": 7,
@@ -13,7 +13,7 @@
 
     function getPixelLength(str) {
         var arr = str.split('');
-        var len = 10;
+        var len = 12;
         for (var i = 0; i < arr.length; i++) {
             var charLen = lengthInfo[arr[i]];
             len += (charLen ? charLen : 8);
@@ -69,28 +69,30 @@
     }
 
     function _get(req, s, headers) {
-        var owner = checkOwner();
-        if (owner.hasOwnProperty('error')) return owner;
-
-        req.subject = req.subject ? (req.subject+'').trim() : '';
-        if (!req.subject) {
-            return {error:469, detail: 'need "subject" parameter.'};
-        }
-
-        Data.useDataSource('mysql_any_badge');
-        var sql = 'select subject, status, color from badge where owner=' +
-            owner + ' and subject="' + req.subject + '";';
-        var data = Data.fetch(sql);
-        if (data.hasOwnProperty('error') || data.data.length == 0) {
-            Log.error('subject not found! subject=' + subject);
-            data.data = [['unknown subject', 'unknown status', 'red']];
-        }
-        data = data.data[0];
-
         headers.put('Pragma', 'no-cache');
         headers.put('Expiheaders', new Date().toString());
         headers.put('Last-Modified', new Date().toString());
         headers.put('Content-Type', 'image/svg+xml');
+
+        req.subject = req.subject ? (req.subject+'').trim() : '';
+        if (!req.subject) {
+            return genSvg('Error', 'need a subject', 'bad');
+        }
+
+        var owner = getOwner(req.privateKey);
+        if (owner.hasOwnProperty('error')) {
+            return genSvg('Error', req.privateKey ? 'invalid private key' : 'need a private key', 'bad');
+        }
+
+        Data.useDataSource('mysql_any_badge');
+        var sql = 'select subject, status, color from badge where owner=' +
+                  owner + ' and subject="' + req.subject + '";';
+        var data = Data.fetch(sql);
+        if (data.hasOwnProperty('error') || data.data.length == 0) {
+            Log.error('subject not found! subject=' + req.subject);
+            data.data = [['subject', 'not found', 'bad']];
+        }
+        data = data.data[0];
 
         return genSvg(data[0], data[1], data[2]);
     }

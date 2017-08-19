@@ -1,23 +1,31 @@
-<div class="container" jigsawScrollBar scrollBarAxis="y" [scrollBarSnapAmount]="10" [scrollBarScrollAmount]="80">
-  <div class="section">
+<div class="guides-container" jigsawScrollBar scrollBarAxis="y" [scrollBarSnapAmount]="10" [scrollBarScrollAmount]="80">
+  <div class="guides-section">
     <h3>
       {{'signIn.header' | translate}}
-      <span class="switch-lang"><a (click)="switchLang()">{{'switchLang' | translate}}</a></span>
+      <span class="guides-switch-lang"><a (click)="switchLang()">{{'switchLang' | translate}}</a></span>
     </h3>
     <p>{{'signIn.detail' | translate}}</p>
   </div>
-  <div class="section">
+  <div class="guides-section">
     <h3>{{'createBadge.header' | translate}}</h3>
     <p [innerHtml]="'createBadge.detail' | translate"></p>
   </div>
-  <div class="section">
+  <div class="guides-section">
     <h3>{{'useBadge.header' | translate}}</h3>
     <p [innerHtml]="'useBadge.detail' | translate"></p>
+  </div>
+  <div class="guides-section">
+    <h3>{{'updateBadge.header' | translate}}</h3>
+    <p [innerHtml]="'updateBadge.detail' | translate"></p>
+  </div>
+  <div class="guides-section">
+    <h3>{{'contribute.header' | translate}}</h3>
+    <p [innerHtml]="'contribute.detail' | translate"></p>
   </div>
 </div>
 
 <style>
-  .container {
+  .guides-container {
     width: 800px;
     height: calc(100vh - 126px);
     margin: 0 auto 0 auto;
@@ -25,23 +33,43 @@
     font-size: 14px;
   }
 
-  .section {
+  .guides-section {
     margin-bottom: 36px;
   }
 
-  .section h3 {
+  .guides-section h3 {
     border-bottom: 1px #e1e4e8 solid;
     padding-bottom: 6px;
     margin-bottom: 18px;
   }
 
-  .switch-lang {
+  .guides-section a {
+    color: #66ece9;
+  }
+
+  .guides-switch-lang {
     float: right;
   }
 
-  .switch-lang a {
+  .guides-switch-lang a {
     color: #fff;
     font-size: 14px;
+  }
+
+  .guides-img-wrapper {
+    margin: 12px 0 12px 0;
+    text-align: center;
+  }
+
+  .guides-code-block {
+    padding: 6px;
+    border-radius: 2px;
+    margin: 12px 0 12px 0;
+    font-family: "Courier New";
+    background-color: #eee;
+    border: 1px solid #aaa;
+    color: #666;
+    font-size: 10px;
   }
 
 </style>

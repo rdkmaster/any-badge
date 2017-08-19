@@ -3,13 +3,17 @@ import {ButtonInfo, DialogBase, JigsawDialog} from "@rdkmaster/jigsaw";
 
 @Component({
   template: `
-    <jigsaw-dialog width="450px" caption="Put badge to projects" [buttons]="[{label: 'Close'}]" (answer)="dispose($event)">
+    <jigsaw-dialog width="450px" caption="Put badge to projects" [buttons]="[{label: 'Close'}]"
+                   (answer)="dispose($event)">
       <div class="container">
-        <p>Copy the following text, and save it to the <code>README.md</code> of your project.</p>
-        <p class="code-block">{{badgeLink}}</p>
+        <p>Copy the following text, and save it to the <code>README</code> file of your project.</p>
+        <p style="margin-top: 12px">Markdown formatted:</p>
+        <p class="code-block">{{markdownLink}}</p>
+        <p>SVG url:</p>
+        <p class="code-block">{{svgUrl}}</p>
         <p>
           Tip: visit the <a routerLink="/guides/getting-started">getting-started</a>
-          guide to learn how to update the status of your badge anytime you need.
+          guide to learn how to update the status of your badge anytime or anywhere you need.
         </p>
       </div>
     </jigsaw-dialog>
@@ -25,13 +29,20 @@ import {ButtonInfo, DialogBase, JigsawDialog} from "@rdkmaster/jigsaw";
       padding: 6px;
       border-radius: 2px;
       margin: 12px 0 12px 0;
-      font-family: Monospaced;
-      background-color: #ccc;
+      font-family: "Courier New";
+      background-color: #eee;
       border: 1px solid #aaa;
     }
   `]
 })
 export class CopyBadgeComponent extends DialogBase {
   @ViewChild(JigsawDialog) dialog: JigsawDialog;
-  badgeLink:string = '[![e2e testcases count](http://rdkmaster.com/rdk/service/app/badges/server/get-badge?type=e2e%20testcases)](http://rdk.zte.com.cn)'
+
+  svgUrl:string = '';
+  markdownLink:string = '';
+
+  set initData(value) {
+    this.svgUrl = `http://rdkmaster.com/rdk/service/app/any-badge/server/svg?subject=${value.subject}&privateKey=${value.privateKey}`;
+    this.markdownLink = `[![${value.subject} not found](${this.svgUrl})](https://github.com/rdkmaster/any-badge)`;
+  }
 }

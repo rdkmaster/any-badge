@@ -13,6 +13,7 @@ import {
 import {HttpResult} from "../utils/typings";
 import {Utils} from "../utils/utils";
 import {CopyBadgeComponent} from "./copy-badge.component";
+import {AuthService} from "../services/auth.service";
 
 type SharedInfo = { tooltip: string, svgUrl: string, bgColor: { 'background-color': string } };
 
@@ -52,7 +53,7 @@ export class OperationTableCell extends TableCellRenderer {
   // the template can access to the `shared` object
   public shared = shared;
 
-  constructor(private _http: Http, private _popupService: PopupService) {
+  constructor(private _http: Http, private _popupService: PopupService, private _authService:AuthService) {
     super();
   }
 
@@ -76,7 +77,7 @@ export class OperationTableCell extends TableCellRenderer {
           shared[row].tooltip = '';
           shared[row].bgColor['background-color'] = '';
           //change the time stamp to force the browser to refresh the svg
-          shared[row].svgUrl = `/rdk/service/app/any-badge/server/badge-svg?subject=${rowData[1]}&_=${+new Date}`;
+          shared[row].svgUrl = `/rdk/service/app/any-badge/server/svg?subject=${rowData[1]}&_=${+new Date}`;
         }
       });
   }
@@ -110,7 +111,9 @@ export class OperationTableCell extends TableCellRenderer {
   }
 
   public popCopyDialog(tableData: TableData, row: number) {
-    this._popupService.popup(CopyBadgeComponent);
+    this._popupService.popup(CopyBadgeComponent, {}, {
+      subject: this.tableData.data[this.row][1], privateKey: this._authService.privateKey
+    });
   }
 }
 
@@ -218,7 +221,7 @@ export class BadgeListComponent implements OnInit {
       data.header = ['Badge', 'Subject', 'Status', 'Color', 'Description'];
       data.field = ['badge', 'subject', 'status', 'color', 'description'];
       data.data.forEach(item => {
-        const svg = `/rdk/service/app/any-badge/server/badge-svg?subject=${item[0]}`;
+        const svg = `/rdk/service/app/any-badge/server/svg?subject=${item[0]}`;
         item.unshift(svg);
         tableDataBackup.push(item.concat());
         shared.push({tooltip: '', svgUrl: svg, bgColor: {'background-color': ''}});

@@ -10,10 +10,10 @@ description text(256));
 
 (function() {
 
-    var _checkOwner = require('$svr/utils.js').checkOwner;
+    var _getOwner = require('$svr/utils.js').getOwner;
 
     function _get(req, s, headers) {
-        var owner = _checkOwner();
+        var owner = _getOwner(req.privateKey);
         if (owner.hasOwnProperty('error')) return owner;
 
         Data.useDataSource('mysql_any_badge');
@@ -38,7 +38,7 @@ description text(256));
             return {error:462, detail: 'need a subject property'};
         }
 
-        var owner = _checkOwner();
+        var owner = _getOwner(req.privateKey);
         if (owner.hasOwnProperty('error')) return owner;
 
         Data.useDataSource('mysql_any_badge');
@@ -60,7 +60,7 @@ description text(256));
     }
 
     function _put(req, s, headers) {
-        var owner = _checkOwner();
+        var owner = _getOwner(req.privateKey);
         if (owner.hasOwnProperty('error')) return owner;
 
         var r = _get(req, s, headers);
@@ -89,7 +89,6 @@ description text(256));
     }
 
     function _delete(req, s, headers) {
-        log(req);
         req.subject = req.subject ? req.subject.trim() : '';
         if (!req.subject) {
             return {error:462, detail: 'need a subject property'};

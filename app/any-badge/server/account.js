@@ -81,6 +81,10 @@ description text(256));
             }
 
             var r = Data.update(sql);
+            if (!r.hasOwnProperty('error') && req.changePrivateKey) {
+                Cache.del(req.changePrivateKey);
+                Cache.put(privateKey, owner);
+            }
             return r.hasOwnProperty('error') ?
                 {error: 455, detail: 'unable to change account, detail: ' + r.error} :
                 {error: 0, detail: req.changePrivateKey ? privateKey : 'ok'};

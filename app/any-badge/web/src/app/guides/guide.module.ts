@@ -61,7 +61,7 @@ export class GuideModule {
         header: '随时随地更新徽章',
         detail: `
            虽然你可以在<a href="/badges">徽章列表</a>中手工对徽章的状态做修改，但是 Any Badge 提供了一个更好的方式来做这事，
-           这也我们推荐的方式来。对下面的 url 发出一个 <code>PUT</code> 请求：
+           这也我们推荐的方式。对下面的 url 发出一个 <code>PUT</code> 请求：
            <p class="guides-code-block">http://rdkmaster.com/rdk/service/app/any-badge/server/badge</p>
            在请求的body中，带上下面的参数：
            <p class="guides-code-block">
@@ -73,23 +73,24 @@ export class GuideModule {
            support css styled color and good/normal/bad enum items<br>
            &nbsp;&nbsp;&nbsp;&nbsp;description:&nbsp;'' // optional, a description string<br>
            }</p>
+           它将返回一个如下的对象：
+           <p class="guides-code-block">{ error: 0, detail: 'ok' }</p>
+           其中 <code>error</code> 属性的值等于0表示操作成功，如果它大于0，则表示出了一些问题，可以通过 <code>detail</code>
+           属性获知问题所在。<br>
            有了这个 api 你就可以随时随地的更新你的徽章了。在你的CI系统中更新徽章是一个典型的场景，一旦你的脚本完成了计算工作，
            它就可以使用 <code>curl</code> 命令来更新徽章了，命令看起来像这样：
            <p class="guides-code-block">
-            curl -X PUT -H "Cookie: session=any-badge-session-jjQqu22Jh06VDnl44c-1503111448897"
-            -d '{"subject":"some count","privateKey":"AgqwCXQK-fOYrWBtK-MFrB2BoM-vEuhkaA7","status":"123","color":"bad"}'
+            curl -X PUT -d '{"subject":"some count","privateKey":"AgqwCXQK-fOYrWBtK-MFrB2BoM-vEuhkaA7","status":"123","color":"bad"}'
             http://rdkmaster.com/rdk/service/app/any-badge/server/badge
            </p>
            不仅如此，除了能够更新徽章的状态，你还可以利用这个 api 来创建、删除徽章。使用 <code>POST</code> 来创建一个新徽章：
            <p class="guides-code-block">
-            curl -X POST -H "Cookie: session=any-badge-session-jjQqu22Jh06VDnl44c-1503111448897"
-            -d '{"subject":"some count","privateKey":"AgqwCXQK-fOYrWBtK-MFrB2BoM-vEuhkaA7","status":"123","color":"bad"}'
+            curl -X POST -d '{"subject":"some count","privateKey":"AgqwCXQK-fOYrWBtK-MFrB2BoM-vEuhkaA7","status":"123","color":"bad"}'
             http://rdkmaster.com/rdk/service/app/any-badge/server/badge
            </p>
            使用 <code>DELETE</code> 来删除徽章：
            <p class="guides-code-block">
-            curl -X DELETE -H "Cookie: session=any-badge-session-jjQqu22Jh06VDnl44c-1503111448897"
-            -d '{"subject":"some count","privateKey":"AgqwCXQK-fOYrWBtK-MFrB2BoM-vEuhkaA7","status":"123","color":"bad"}'
+            curl -X DELETE -d '{"subject":"some count","privateKey":"AgqwCXQK-fOYrWBtK-MFrB2BoM-vEuhkaA7"}'
             http://rdkmaster.com/rdk/service/app/any-badge/server/badge
            </p>
         `
@@ -151,25 +152,26 @@ export class GuideModule {
            support css styled color and good/normal/bad enum items<br>
            &nbsp;&nbsp;&nbsp;&nbsp;description:&nbsp;'' // optional, a description string<br>
            }</p>
+           It should return an object look like this:
+           <p class="guides-code-block">{ error: 0, detail: 'ok' }</p>
+           The <code>error</code> property equals 0 represents everything is fine, in the other hand, <code>error</code> &gt; 0
+           represents something wrong, and the <code>detail</code> property should tell what problem is.<br><br>
            With these api, you can update the badge status anytime anywhere. The best scenario is your CI
            system, as soon as your script finishes its calculation, it can update the badge by using the
            <code>curl</code> command, it looks like this:
            <p class="guides-code-block">
-            curl -X PUT -H "Cookie: session=any-badge-session-jjQqu22Jh06VDnl44c-1503111448897"
-            -d '{"subject":"some count","privateKey":"AgqwCXQK-fOYrWBtK-MFrB2BoM-vEuhkaA7","status":"123","color":"bad"}'
+            curl -X PUT -d '{"subject":"some count","privateKey":"AgqwCXQK-fOYrWBtK-MFrB2BoM-vEuhkaA7","status":"123","color":"bad"}'
             http://rdkmaster.com/rdk/service/app/any-badge/server/badge
            </p>
            What's more, you can not only use it to update the status, you can also use it
            to create or remove a badge. Use http <code>POST</code> to create a new badge: 
            <p class="guides-code-block">
-            curl -X POST -H "Cookie: session=any-badge-session-jjQqu22Jh06VDnl44c-1503111448897"
-            -d '{"subject":"some count","privateKey":"AgqwCXQK-fOYrWBtK-MFrB2BoM-vEuhkaA7","status":"123","color":"bad"}'
+            curl -X POST -d '{"subject":"some count","privateKey":"AgqwCXQK-fOYrWBtK-MFrB2BoM-vEuhkaA7","status":"123","color":"bad"}'
             http://rdkmaster.com/rdk/service/app/any-badge/server/badge
            </p>
            Use http <code>DELETE</code> to remove a badge:
            <p class="guides-code-block">
-            curl -X DELETE -H "Cookie: session=any-badge-session-jjQqu22Jh06VDnl44c-1503111448897"
-            -d '{"subject":"some count","privateKey":"AgqwCXQK-fOYrWBtK-MFrB2BoM-vEuhkaA7","status":"123","color":"bad"}'
+            curl -X DELETE -d '{"subject":"some count","privateKey":"AgqwCXQK-fOYrWBtK-MFrB2BoM-vEuhkaA7"}'
             http://rdkmaster.com/rdk/service/app/any-badge/server/badge
            </p>
         `

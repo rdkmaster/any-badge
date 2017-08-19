@@ -51,8 +51,14 @@ export class GuideModule {
         detail: `
           Once you'v logged in Any Badge successfully, you can follow the "My Badges" link
           in the front page of Any Badge to check your badge list, you can create or modify
-          or remove the badge there. Feel free to create any badge you want.<br><br>
-          fdfdf
+          or remove the badges there. Feel free to create any badge you want. The following
+          picture explains everything:
+          <p class="guide-img-wrapper"><img src="../../assets/badges-table.png"></p>
+        `
+      },
+      useBadge: {
+        header: 'Put the badge to your project',
+        detail:`
         `
       }
     }, true);

@@ -7,7 +7,7 @@ It is strongly recommended to follow the Tour of Heroes([the official version](h
 After learning the two tourists, you are ready to learn how to build a full featured application with Jigsaw七巧板 and RDK, the code hosted in this project shows you the best way to do this. Considering that you are now an experienced Angular and Jigsaw developer, this project will not tell you how to build the application step by step, but only shows you the code, most of which has detailed explaination.
 
 ## install
-Executing the following script:
+Execute the following script:
 ```
 git clone https://github.com/rdkmaster/any-badge.git
 cd any-badge

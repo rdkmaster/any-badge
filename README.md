@@ -1,6 +1,6 @@
 # Jigsaw Any Badge
 
-[![powered by not found](http://rdkmaster.com/rdk/service/app/any-badge/server/svg?subject=powered by&privateKey=qgvxHISQ-Zi8LZ3Wc-OihYOz7U-uik3BA9l)](https://github.com/rdkmaster/jigsaw)
+[![powered by not found](http://rdkmaster.com/rdk/service/app/any-badge/server/svg?subject=powered%20by&privateKey=qgvxHISQ-Zi8LZ3Wc-OihYOz7U-uik3BA9l)](https://github.com/rdkmaster/jigsaw)
 
 This is a full featured application including a web page based on [Jisgsaw七巧板](https://github.com/rdkmaster/jigsaw), and a back end based on [RDK](https://github.com/rdkmaster/rdk). It shows how to use Jigsaw with RDK to build an application.
 

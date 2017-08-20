@@ -33,7 +33,6 @@
 package-lock.json
 /proc
 **/server/logs
-run-rdk.bat
 **/app/common
 
 # e2e

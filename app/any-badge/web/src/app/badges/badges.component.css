@@ -3,7 +3,6 @@
   width: 980px;
   margin-right: auto;
   margin-left: auto;
-  height: calc(100vh - 126px);
 
   padding: 12px 12px 12px 12px;
 }
@@ -13,5 +12,6 @@
   text-align: right;
 }
 
-.content {
+jigsaw-table {
+  height: calc(100vh - 132px);
 }

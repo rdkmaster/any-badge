@@ -3,7 +3,7 @@ import {ButtonInfo, DialogBase, JigsawDialog} from "@rdkmaster/jigsaw";
 
 @Component({
   template: `
-    <jigsaw-dialog width="450px" caption="Put badge to projects" [buttons]="[{label: 'Close'}]"
+    <jigsaw-dialog width="600px" caption="Put badge to projects" [buttons]="[{label: 'Close'}]"
                    (answer)="dispose($event)">
       <div class="container">
         <p>Copy the following text, and save it to the <code>README</code> file of your project.</p>
@@ -23,7 +23,7 @@ import {ButtonInfo, DialogBase, JigsawDialog} from "@rdkmaster/jigsaw";
       padding: 12px;
     }
     p {
-      width: 424px;
+      width: 574px;
     }
     .code-block {
       padding: 6px;

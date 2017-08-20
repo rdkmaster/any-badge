@@ -1,5 +1,7 @@
 (function() {
-    var getOwner = require('$svr/utils.js').getOwner;
+    var utils = require('$svr/utils.js');
+    var getOwner = utils.getOwner;
+    var randomNumber = utils.randomNumber;
     var lengthInfo = {
         "a": 7, "b": 7, "c": 6, "d": 6, "e": 7, "f": 5, "g": 7, "h": 7, "i": 2, "j": 4, "k": 7, "l": 3,
         "m": 11, "n": 7, "o": 6, "p": 7, "q": 7, "r": 5, "s": 5, "t": 5, "u": 7, "v": 6, "w": 9, "x": 7,
@@ -21,22 +23,29 @@
         return len;
     }
 
+    function randomColor() {
+        var r = Number(randomNumber(0, 255)).toString(16);
+        var g = Number(randomNumber(0, 255)).toString(16);
+        var b = Number(randomNumber(0, 255)).toString(16);
+        return '#' + r + g + b;
+    }
+
     function escapeString(str) {
         return str.replace(/&/g, '&amp;').replace(/>/g, '&gt;').replace(/</g, '&lt;')
                   .replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
     }
 
-    function genSvg(subject, status, level) {
-        var countColor;
-        switch(level) {
+    function genSvg(subject, subjectColor, status, statusColor) {
+        var color;
+        switch(statusColor) {
             case 'bad':
-                countColor = '#D8604B'; break;
+                color = '#D8604B'; break;
             case 'normal':
-                countColor = '#D2AB1F'; break;
+                color = '#D2AB1F'; break;
             case 'good':
-                countColor = '#4C1'; break;
+                color = '#4C1'; break;
             default:
-                countColor = level;
+                color = statusColor;
         }
 
         var subjectWidth = getPixelLength(subject);
@@ -55,9 +64,9 @@
             '    </linearGradient>' + 
             '' + 
             '    <rect rx="3" fill="url(#a)" width="' + (subjectWidth+statusWidth) + '" height="20" class="sWidth"/>' + 
-            '    <rect rx="3" fill="#555" width="' + (subjectWidth+statusWidth) + '" height="20" class="sWidth"/>' + 
-            '    <rect rx="3" fill="' + countColor + '" width="' + statusWidth + '" x="' + subjectWidth + '" height="20" class="vWidth tMove"/>' + 
-            '    <rect fill="' + countColor + '" x="' + subjectWidth + '" width="13" height="20" class="tMove"/>' + 
+            '    <rect rx="3" fill="' + subjectColor + '" width="' + (subjectWidth+statusWidth) + '" height="20" class="sWidth"/>' + 
+            '    <rect rx="3" fill="' + color + '" width="' + statusWidth + '" x="' + subjectWidth + '" height="20" class="vWidth tMove"/>' + 
+            '    <rect fill="' + color + '" x="' + subjectWidth + '" width="13" height="20" class="tMove"/>' + 
             '' + 
             '    <g font-size="11" font-family="DejaVu Sans,Verdana,Geneva,sans-serif" fill="#fff">' + 
             '        <text x="6" fill="#010101" fill-opacity=".3" y="15">' + subject + '</text>' + 
@@ -76,25 +85,33 @@
 
         req.subject = req.subject ? (req.subject+'').trim() : '';
         if (!req.subject) {
-            return genSvg('Error', 'need a subject', 'bad');
+            return genSvg('Error', '#555', 'need a subject', 'bad');
+        }
+
+        if (req.privateKey == 'jigsaw-any-badge') {
+            switch(req.subject) {
+                case 'logo': return genSvg('Jigsaw', randomColor(), 'Any Badge', randomColor());
+                case 'new': return genSvg('unknown', '#555', 'unknown', 'bad');
+                default: return genSvg('error', '#555', 'unknown subject', 'bad');
+            }
         }
 
         var owner = getOwner(req.privateKey);
         if (owner.hasOwnProperty('error')) {
-            return genSvg('Error', req.privateKey ? 'invalid private key' : 'need a private key', 'bad');
+            return genSvg('Error', '#555', req.privateKey ? 'invalid private key' : 'need a private key', 'bad');
         }
 
         Data.useDataSource('mysql_any_badge');
-        var sql = 'select subject, status, color from badge where owner=' +
+        var sql = 'select subject,subject_color,status,status_color from badge where owner=' +
                   owner + ' and subject="' + req.subject + '";';
         var data = Data.fetch(sql);
         if (data.hasOwnProperty('error') || data.data.length == 0) {
             Log.error('subject not found! subject=' + req.subject);
-            data.data = [['subject', 'not found', 'bad']];
+            data.data = [['subject', '#555', 'not found', 'bad']];
         }
         data = data.data[0];
 
-        return genSvg(data[0], data[1], data[2]);
+        return genSvg(data[0], data[1], data[2], data[3]);
     }
 
     return {

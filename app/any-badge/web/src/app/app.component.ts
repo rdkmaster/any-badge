@@ -46,8 +46,11 @@ export class AppComponent implements OnInit {
     this._disposerTimer = null;
   }
 
-  public showAccount() {
-    alert('sss');
+  public logoSvg = LOGO_SVG_URL;
+
+  public changeColor() {
+    // change the url to force the browser to refresh the image.
+    this.logoSvg = LOGO_SVG_URL + '&_=' + (+new Date);
   }
 
   ngOnInit() {
@@ -55,5 +58,5 @@ export class AppComponent implements OnInit {
   }
 }
 
-
+const LOGO_SVG_URL = '/rdk/service/app/any-badge/server/svg?subject=logo&privateKey=jigsaw-any-badge';
 

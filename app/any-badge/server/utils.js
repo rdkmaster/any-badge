@@ -73,6 +73,7 @@
     return {
         checkOwner: _checkOwner,
         randomString: _randomString,
+        randomNumber: _random,
         genPrivateKey: _genPrivateKey,
         getOwner: _getOwner
     }

@@ -41,6 +41,7 @@ description text(256));
         put: function(req, s, headers) {
             req.password = req.password ? req.password.trim() : '';
             req.newPassword = req.newPassword ? req.newPassword.trim() : '';
+            req.nickName = req.nickName ? req.nickName.trim() : '';
             req.description = req.description ? req.description.trim() : '';
 
             if (!req.password && (req.newPassword || req.changePrivateKey)) {
@@ -52,6 +53,9 @@ description text(256));
             var sql = 'update user set ';
             if (req.newPassword) {
                 sql += 'password="' + req.newPassword + '",';
+            }
+            if (req.nickName) {
+                sql += 'nick_name="' + req.nickName + '",';
             }
             if (req.description) {
                 sql += 'description="' + req.description + '",';

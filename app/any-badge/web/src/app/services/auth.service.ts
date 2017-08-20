@@ -11,7 +11,11 @@ import {CookieUtils} from "../utils/utils";
 import {Http, RequestOptionsArgs} from "@angular/http";
 
 export type AccountInfo = {
-  password?: string, newPassword?: string, description?: string, changePrivateKey?: boolean
+  password?: string,
+  newPassword?: string,
+  nickName?: string,
+  description?: string,
+  changePrivateKey?: boolean
 }
 
 @Injectable()

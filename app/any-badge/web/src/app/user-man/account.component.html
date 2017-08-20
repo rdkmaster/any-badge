@@ -64,17 +64,21 @@
     </div>
   </div>
   <div class="settings">
-    <h3>Change Description</h3>
-    <p>How do you describe yourself?</p>
+    <h3>Change account information</h3>
     <div>
-      <label>Current Description</label>
+      <label>Description</label>
       <jigsaw-input #descInput [value]="authService.description"></jigsaw-input>
-      <jigsaw-button (click)="changeDescription(descInput.value)">
-        Change
-      </jigsaw-button>
-      <span [hidden]="!changeDescDone">
-        <i [ngClass]="changeDescClass" style="font-size: 16px;"></i>
-        Change description {{changeDescResult}}
+    </div>
+    <div>
+      <label>Nick Name</label>
+      <jigsaw-input #nickNameInput [value]="authService.nickName"></jigsaw-input>
+    </div>
+    <div>
+      <label></label>
+      <jigsaw-button (click)="changeInformation(descInput.value, nickNameInput.value)">Save</jigsaw-button>
+      <span [hidden]="!changeInfoDone">
+        <i [ngClass]="changeInfoClass" style="font-size: 16px;"></i>
+        Change account information {{changeInfoResult}}
       </span>
     </div>
   </div>

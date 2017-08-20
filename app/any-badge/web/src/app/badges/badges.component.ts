@@ -1,10 +1,10 @@
 import 'rxjs/add/operator/switchMap';
 import {Http, RequestOptionsArgs} from "@angular/http";
-import {AfterViewInit, Component, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, Renderer2, TemplateRef, ViewChild} from '@angular/core';
 import {
   AdditionalColumnDefine,
   ColumnDefine,
-  JigsawErrorAlert, JigsawInput,
+  JigsawErrorAlert, JigsawInput, LoadingService, PopupInfo,
   PopupService,
   TableCellEditor,
   TableCellRenderer,
@@ -26,13 +26,21 @@ const shared: SharedInfo[] = [];
       <a (click)="saveBadge(tableData, row)">
         <i class="fa fa-floppy-o"></i>
       </a>
-      <a (click)="removeBadge(tableData, row)">
+      <a (click)="removeBadge($event)">
         <i class="fa fa-trash"></i>
       </a>
       <a (click)="popCopyDialog(tableData, row)">
         <i class="fa fa-copy"></i>
       </a>
     </span>
+    <ng-template #confirm>
+      <jigsaw-tooltip-dialog>
+        <h4>Confirm</h4>
+        <p style="margin: 12px 0 12px 0">Are you sure to remove this badge?<br>This action is not recoverable.</p>
+        <jigsaw-button (click)="removeBadgeDo(tableData, row)" width="50px">Yes</jigsaw-button>
+        <jigsaw-button (click)="closeConfirmDialog()" width="50px">Cancel</jigsaw-button>
+      </jigsaw-tooltip-dialog>
+    </ng-template>
   `,
   styles: [`
     a {
@@ -44,7 +52,7 @@ const shared: SharedInfo[] = [];
     }
 
     span {
-      padding: 8px 26px 6px 26px;
+      padding: 6px;
     }
   `]
 })
@@ -52,8 +60,10 @@ export class OperationTableCell extends TableCellRenderer {
   // the template can not directly read the global object, use this property to make sure
   // the template can access to the `shared` object
   public shared = shared;
+  @ViewChild('confirm') confirmDialog:TemplateRef<any>;
 
-  constructor(private _http: Http, private _popupService: PopupService, private _authService:AuthService) {
+  constructor(private _http: Http, private _popupService: PopupService, private _renderer:Renderer2,
+              private _authService:AuthService, private _loading: LoadingService) {
     super();
   }
 
@@ -61,17 +71,20 @@ export class OperationTableCell extends TableCellRenderer {
     if (!Utils.isValidSubject(tableData, row)) {
       return;
     }
+    const blockInfo = this._loading.show();
     const rowData = tableData.data[row];
     const method = tableDataBackup[row] ? 'put' : 'post';
     this._http[method]('/rdk/service/app/any-badge/server/badge', {
-      subject: rowData[1], status: rowData[2], color: rowData[3], description: rowData[4]
+      subject: rowData[1], subjectColor: rowData[2], status: rowData[3], statusColor: rowData[4], description: rowData[5]
     })
       .map(resp => resp.json())
       .subscribe((result: HttpResult) => {
+        blockInfo.dispose();
         if (result.error) {
           const popupInfo = this._popupService.popup(JigsawErrorAlert, {}, {
             message: 'Unable to save your change! Detail: ' + result.detail
           });
+          popupInfo.answer.subscribe(() => popupInfo.dispose());
         } else {
           tableDataBackup[row] = rowData.concat();
           shared[row].tooltip = '';
@@ -82,7 +95,49 @@ export class OperationTableCell extends TableCellRenderer {
       });
   }
 
-  public removeBadge(tableData: TableData, row: number) {
+  private _confirmDialogInfo:PopupInfo;
+
+  public closeConfirmDialog() {
+    if (this._confirmDialogInfo) {
+      this._confirmDialogInfo.dispose();
+    }
+  }
+
+  public removeBadge(event:MouseEvent) {
+    this.closeConfirmDialog();
+    this._confirmDialogInfo = this._popupService.popup(this.confirmDialog, {
+      modal: false,
+      pos:{ x:event.clientX, y:event.clientY },
+      posOffset: { top: -130, left: -15 }
+    });
+    const removeEvent = this._renderer.listen(window, 'click', (event1) => {
+      if (event.target === event1.target) {
+        return;
+      }
+
+      if (this._isInTooltipDialog(event1, this._confirmDialogInfo.element)) {
+        // user click at any element from the dialog
+        return;
+      }
+      this.closeConfirmDialog();
+      removeEvent();
+    });
+  }
+
+  /**
+   * notice: it is not necessary to do this in this specific scenario,
+   * because that after whatever you clicked in the tooltip dialog, we will need to dispose the dialog.
+   * but since this is a teaching project, I'll still show you how in case you have to do this in your case.
+   * @param {MouseEvent} event
+   * @returns {boolean}
+   * @private
+   */
+  private _isInTooltipDialog(event, dialogElement):boolean {
+    return event.path.indexOf(dialogElement) != -1;
+  }
+
+  public removeBadgeDo(tableData: TableData, row: number) {
+    this.closeConfirmDialog();
     const rowData = tableDataBackup[row];
     if (!rowData) {
       //not being saved yet
@@ -93,14 +148,17 @@ export class OperationTableCell extends TableCellRenderer {
       return;
     }
 
+    const blockInfo = this._loading.show();
     let opt = <RequestOptionsArgs>{body: {subject: rowData[1]}};
     this._http.delete('/rdk/service/app/any-badge/server/badge', opt)
       .map(resp => resp.json())
       .subscribe((result: HttpResult) => {
+        blockInfo.dispose();
         if (result.error) {
           const popupInfo = this._popupService.popup(JigsawErrorAlert, {}, {
             message: 'Unable to delete the badge! Detail: ' + result.detail
           });
+          popupInfo.answer.subscribe(() => popupInfo.dispose());
         } else {
           shared.splice(row, 1);
           tableDataBackup.splice(row, 1);
@@ -164,38 +222,41 @@ export class BadgeListComponent implements OnInit {
   public columns: ColumnDefine[] = [
     {
       target: 'badge',
-      width: '30%',
+      width: '294px',
       cell: {
         renderer: BadgeSvgTableCell,
       }
     },
     {
-      target: 'subject',
-      width: '15%',
+      target: 'subject', width: '149px',
       cell: {
         editable: true,
         editorRenderer: SubjectEditor,
       }
     },
     {
-      target: 'status',
-      width: '15%',
+      target: 'subject_color', width: '117px',
       cell: {
         editable: true,
         editorRenderer: TableCellEditor,
       }
     },
     {
-      target: 'color',
-      width: '15%',
+      target: 'status', width: '117px',
       cell: {
         editable: true,
         editorRenderer: TableCellEditor,
       }
     },
     {
-      target: 'description',
-      width: '15%',
+      target: 'status_color', width: '117px',
+      cell: {
+        editable: true,
+        editorRenderer: TableCellEditor,
+      }
+    },
+    {
+      target: 'description', width: '117px',
       cell: {
         editable: true,
         editorRenderer: TableCellEditor,
@@ -204,7 +265,7 @@ export class BadgeListComponent implements OnInit {
   ];
   public additionalColumns: AdditionalColumnDefine[] = [
     {
-      width: '10%',
+      width: '69px',
       header: {
         text: 'Operation'
       },
@@ -214,18 +275,19 @@ export class BadgeListComponent implements OnInit {
     }
   ];
 
-  constructor(http: Http) {
+  constructor(http: Http, private _loading: LoadingService) {
     this.badges.http = http;
     this.badges.dataReviser = (data) => {
       tableDataBackup.splice(0, tableDataBackup.length);
-      data.header = ['Badge', 'Subject', 'Status', 'Color', 'Description'];
-      data.field = ['badge', 'subject', 'status', 'color', 'description'];
+      data.header = ['Badge', 'Subject', 'Subject Color', 'Status', 'Status Color', 'Description'];
+      data.field = ['badge', 'subject', 'subject_color', 'status', 'status_color', 'description'];
       data.data.forEach(item => {
         const svg = `/rdk/service/app/any-badge/server/svg?subject=${item[0]}`;
         item.unshift(svg);
         tableDataBackup.push(item.concat());
         shared.push({tooltip: '', svgUrl: svg, bgColor: {'background-color': ''}});
       });
+      this
       return data;
     }
   }
@@ -233,10 +295,10 @@ export class BadgeListComponent implements OnInit {
   public newBadge(): void {
     shared.push({
       tooltip: 'Invalid subject, these chars only:<br>a-z 0-9 - _',
-      svgUrl: '',
+      svgUrl: '/rdk/service/app/any-badge/server/svg?subject=new&privateKey=jigsaw-any-badge',
       bgColor: {'background-color': '#F6EBBC'}
     });
-    this.badges.data.push(['', '< new badge >', '< new badge >', 'good', 'an awesome badge']);
+    this.badges.data.push(['', '<new badge>', '#555', '--', 'bad', 'an awesome badge']);
     this.badges.refresh();
   }
 
@@ -253,5 +315,8 @@ export class BadgeListComponent implements OnInit {
 
   ngOnInit() {
     this.badges.fromAjax('/rdk/service/app/any-badge/server/badge');
+
+    const blockInfo = this._loading.show();
+    this.badges.onRefresh(() => blockInfo.dispose());
   }
 }

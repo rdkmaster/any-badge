@@ -1,5 +1,8 @@
-import {AfterContentInit, Component, ViewChild} from "@angular/core";
-import {ButtonInfo, DialogBase, JigsawDialog, JigsawInput, PopupInfo, PopupService} from "@rdkmaster/jigsaw";
+import {AfterContentInit, Component, ElementRef, ViewChild} from "@angular/core";
+import {
+  ButtonInfo, DialogBase, JigsawDialog, JigsawInput, LoadingService, PopupInfo,
+  PopupService
+} from "@rdkmaster/jigsaw";
 import {HttpResult} from "../utils/typings";
 import {AuthService} from "../services/auth.service";
 
@@ -77,7 +80,7 @@ export class ConfirmDialog extends DialogBase implements AfterContentInit {
 export class AccountComponent {
   errorMessage = '';
 
-  constructor(private _popupService: PopupService, public authService: AuthService) {
+  constructor(private _popupService: PopupService, private _loading:LoadingService, public authService: AuthService) {
   }
 
   changePasswordDone = false;
@@ -93,10 +96,12 @@ export class AccountComponent {
       return;
     }
 
+    const blockInfo = this._loading.show();
     this.changePasswordDone = false;
     // delete value.confirm;
     this.authService.changeAccountInfo(value).subscribe((result: HttpResult) => {
       this.changePasswordDone = true;
+      blockInfo.dispose();
       const isSuccess = result.error == 0;
       this.changePasswordClass['fa-times'] = !isSuccess;
       this.changePasswordClass['action-failed'] = !isSuccess;
@@ -114,10 +119,12 @@ export class AccountComponent {
   changeKeyResult = '';
 
   changePrivateKey() {
+    const blockInfo = this._loading.show();
     this.changeKeyDone = false;
     const popupInfo: PopupInfo = this._popupService.popup(
       ConfirmDialog, {modal: true}, ConfirmType.changePrivateKey);
     popupInfo.answer.subscribe(button => {
+      blockInfo.dispose();
       if (button && button.label == 'OK' && !button.disabled) {
         this.authService.changeAccountInfo({password: popupInfo.instance.password, changePrivateKey: true})
           .subscribe(result => {
@@ -137,24 +144,26 @@ export class AccountComponent {
     });
   }
 
-  changeDescDone = false;
-  changeDescClass = {
+  changeInfoDone = false;
+  changeInfoClass = {
     'fa': true, 'fa-check': false, 'fa-times': false,
     'action-success': true, 'action-failed': false
   };
-  changeDescResult = '';
+  changeInfoResult = '';
 
-  changeDescription(newDescription: string) {
-    this.changeDescDone = false;
-    this.authService.changeAccountInfo({description: newDescription})
+  changeInformation(newDescription: string, newNickName:string) {
+    const blockInfo = this._loading.show();
+    this.changeInfoDone = false;
+    this.authService.changeAccountInfo({description: newDescription, nickName: newNickName})
       .subscribe(result => {
-        this.changeDescDone = true;
+        blockInfo.dispose();
+        this.changeInfoDone = true;
         const isSuccess = result.error == 0;
-        this.changeDescClass['fa-times'] = !isSuccess;
-        this.changeDescClass['action-failed'] = !isSuccess;
-        this.changeDescClass['fa-check'] = isSuccess;
-        this.changeDescClass['action-success'] = isSuccess;
-        this.changeDescResult = isSuccess ? 'successful' : 'failed, detail: ' + result.detail;
+        this.changeInfoClass['fa-times'] = !isSuccess;
+        this.changeInfoClass['action-failed'] = !isSuccess;
+        this.changeInfoClass['fa-check'] = isSuccess;
+        this.changeInfoClass['action-success'] = isSuccess;
+        this.changeInfoResult = isSuccess ? 'successful' : 'failed, detail: ' + result.detail;
         if (isSuccess) {
           this.authService.description = newDescription;
         }
@@ -165,10 +174,12 @@ export class AccountComponent {
   deleteAccountResult = '';
 
   deleteAccount() {
+    const blockInfo = this._loading.show();
     this.deleteAccountDone = false;
     const popupInfo: PopupInfo = this._popupService.popup(
       ConfirmDialog, {modal: true}, ConfirmType.deleteAccount);
     popupInfo.answer.subscribe(button => {
+      blockInfo.dispose();
       if (button && button.label == 'OK' && !button.disabled) {
         this.authService.deleteAccount(popupInfo.instance.password)
           .subscribe(result => {

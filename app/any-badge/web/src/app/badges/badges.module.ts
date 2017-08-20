@@ -4,10 +4,11 @@ import {FormsModule} from '@angular/forms';
 import {HttpModule} from "@angular/http";
 
 import {
+  JigsawAlertModule,
   JigsawButtonModule, JigsawDialogModule,
-  JigsawInputModule,
+  JigsawInputModule, JigsawLoadingModule,
   JigsawTableModule,
-  JigsawTooltipModule,
+  JigsawTooltipModule, LoadingService,
   PopupService
 } from "@rdkmaster/jigsaw";
 
@@ -20,13 +21,14 @@ import {CopyBadgeComponent} from "app/badges/copy-badge.component";
   imports: [
     CommonModule, FormsModule, BadgeRoutingModule, HttpModule,
     JigsawButtonModule, JigsawTableModule, JigsawInputModule,
-    JigsawTooltipModule, JigsawDialogModule
+    JigsawTooltipModule, JigsawDialogModule, JigsawAlertModule,
+    JigsawLoadingModule
   ],
   declarations: [
     BadgeListComponent, OperationTableCell, BadgeSvgTableCell, SubjectEditor, CopyBadgeComponent
   ],
   entryComponents: [OperationTableCell, BadgeSvgTableCell, SubjectEditor, CopyBadgeComponent],
-  providers: [PopupService]
+  providers: [PopupService, LoadingService]
 })
 export class BadgesModule {
 }

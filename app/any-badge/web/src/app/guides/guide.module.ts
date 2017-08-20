@@ -1,15 +1,16 @@
 import {NgModule} from '@angular/core';
+import {CommonModule} from "@angular/common";
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import {JigsawScrollBarModule} from "@rdkmaster/jigsaw";
 
 import {GettingStartedComponent} from "./getting-started.component";
-import {FeaturesComponent} from "./features.component";
+import {FeaturesComponent} from "./about.component";
 import {GuideRoutingModule} from "./guide-routing.module";
 
 
 @NgModule({
   imports: [
-    GuideRoutingModule, JigsawScrollBarModule, TranslateModule.forRoot()
+    GuideRoutingModule, JigsawScrollBarModule, TranslateModule.forRoot(), CommonModule
   ],
   declarations: [
     GettingStartedComponent, FeaturesComponent
@@ -66,12 +67,13 @@ export class GuideModule {
            在请求的body中，带上下面的参数：
            <p class="guides-code-block">
            {<br>
-           &nbsp;&nbsp;&nbsp;&nbsp;subject: '',&nbsp;&nbsp;&nbsp;&nbsp;// required<br>
-           &nbsp;&nbsp;&nbsp;&nbsp;privateKey: '',&nbsp;&nbsp;// required, you can find it in the account view<br>
-           &nbsp;&nbsp;&nbsp;&nbsp;status: '',&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// optional, a status string<br>
-           &nbsp;&nbsp;&nbsp;&nbsp;color: '',&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// optional, a color string,
-           support css styled color and good/normal/bad enum items<br>
-           &nbsp;&nbsp;&nbsp;&nbsp;description:&nbsp;'' // optional, a description string<br>
+           &nbsp;&nbsp;&nbsp;&nbsp;privateKey: '',&nbsp;&nbsp;&nbsp;// required, you can find it in the account view<br>
+           &nbsp;&nbsp;&nbsp;&nbsp;subject: '',&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// required<br>
+           &nbsp;&nbsp;&nbsp;&nbsp;subjectColor: '',&nbsp;// optional, color of the subject, support css styled color<br>
+           &nbsp;&nbsp;&nbsp;&nbsp;status: '',&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// optional, a status string<br>
+           &nbsp;&nbsp;&nbsp;&nbsp;statusColor: '',&nbsp;&nbsp;// optional, a color string, support css styled color and
+           good/normal/bad enum items<br>
+           &nbsp;&nbsp;&nbsp;&nbsp;description: ''&nbsp;&nbsp;&nbsp;// optional, a description string<br>
            }</p>
            它将返回一个如下的对象：
            <p class="guides-code-block">{ error: 0, detail: 'ok' }</p>
@@ -80,12 +82,12 @@ export class GuideModule {
            有了这个 api 你就可以随时随地的更新你的徽章了。在你的CI系统中更新徽章是一个典型的场景，一旦你的脚本完成了计算工作，
            它就可以使用 <code>curl</code> 命令来更新徽章了，命令看起来像这样：
            <p class="guides-code-block">
-            curl -X PUT -d '{"subject":"some count","privateKey":"AgqwCXQK-fOYrWBtK-MFrB2BoM-vEuhkaA7","status":"123","color":"bad"}'
+            curl -X PUT -d '{"privateKey":"AgqwCXQK-fOYrWBtK-MFrB2BoM-vEuhkaA7","subject":"some count","subjectColor":"#555","status":"123","color":"bad"}'
             http://rdkmaster.com/rdk/service/app/any-badge/server/badge
            </p>
            不仅如此，除了能够更新徽章的状态，你还可以利用这个 api 来创建、删除徽章。使用 <code>POST</code> 来创建一个新徽章：
            <p class="guides-code-block">
-            curl -X POST -d '{"subject":"some count","privateKey":"AgqwCXQK-fOYrWBtK-MFrB2BoM-vEuhkaA7","status":"123","color":"bad"}'
+            curl -X POST -d '{"privateKey":"AgqwCXQK-fOYrWBtK-MFrB2BoM-vEuhkaA7","subject":"some count","subjectColor":"#555","status":"123","color":"bad"}'
             http://rdkmaster.com/rdk/service/app/any-badge/server/badge
            </p>
            使用 <code>DELETE</code> 来删除徽章：
@@ -145,28 +147,29 @@ export class GuideModule {
            Put these parameters in the body of the request:
            <p class="guides-code-block">
            {<br>
-           &nbsp;&nbsp;&nbsp;&nbsp;subject: '',&nbsp;&nbsp;&nbsp;&nbsp;// required<br>
-           &nbsp;&nbsp;&nbsp;&nbsp;privateKey: '',&nbsp;&nbsp;// required, you can find it in the account view<br>
-           &nbsp;&nbsp;&nbsp;&nbsp;status: '',&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// optional, a status string<br>
-           &nbsp;&nbsp;&nbsp;&nbsp;color: '',&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// optional, a color string,
-           support css styled color and good/normal/bad enum items<br>
-           &nbsp;&nbsp;&nbsp;&nbsp;description:&nbsp;'' // optional, a description string<br>
+           &nbsp;&nbsp;&nbsp;&nbsp;privateKey: '',&nbsp;&nbsp;&nbsp;// required, you can find it in the account view<br>
+           &nbsp;&nbsp;&nbsp;&nbsp;subject: '',&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// required<br>
+           &nbsp;&nbsp;&nbsp;&nbsp;subjectColor: '',&nbsp;// optional, color of the subject, support css styled color<br>
+           &nbsp;&nbsp;&nbsp;&nbsp;status: '',&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// optional, a status string<br>
+           &nbsp;&nbsp;&nbsp;&nbsp;statusColor: '',&nbsp;&nbsp;// optional, a color string, support css styled color and
+           good/normal/bad enum items<br>
+           &nbsp;&nbsp;&nbsp;&nbsp;description: ''&nbsp;&nbsp;&nbsp;// optional, a description string<br>
            }</p>
-           It should return an object look like this:
+           It should return an object looks like this:
            <p class="guides-code-block">{ error: 0, detail: 'ok' }</p>
            The <code>error</code> property equals 0 represents everything is fine, in the other hand, <code>error</code> &gt; 0
            represents something wrong, and the <code>detail</code> property should tell what problem is.<br><br>
-           With these api, you can update the badge status anytime anywhere. The best scenario is your CI
+           You can update the badge status anytime anywhere with this api. The best scenario is your CI
            system, as soon as your script finishes its calculation, it can update the badge by using the
            <code>curl</code> command, it looks like this:
            <p class="guides-code-block">
-            curl -X PUT -d '{"subject":"some count","privateKey":"AgqwCXQK-fOYrWBtK-MFrB2BoM-vEuhkaA7","status":"123","color":"bad"}'
+            curl -X PUT -d '{"privateKey":"AgqwCXQK-fOYrWBtK-MFrB2BoM-vEuhkaA7","subject":"some count","subjectColor":"#555","status":"123","color":"bad"}'
             http://rdkmaster.com/rdk/service/app/any-badge/server/badge
            </p>
-           What's more, you can not only use it to update the status, you can also use it
-           to create or remove a badge. Use http <code>POST</code> to create a new badge: 
+           What's more, you can not only use it to update the status, but also use it to create or remove a badge.
+           Use http <code>POST</code> to create a new badge: 
            <p class="guides-code-block">
-            curl -X POST -d '{"subject":"some count","privateKey":"AgqwCXQK-fOYrWBtK-MFrB2BoM-vEuhkaA7","status":"123","color":"bad"}'
+            curl -X POST -d '{"privateKey":"AgqwCXQK-fOYrWBtK-MFrB2BoM-vEuhkaA7","subject":"some count","subjectColor":"#555","status":"123","color":"bad"}'
             http://rdkmaster.com/rdk/service/app/any-badge/server/badge
            </p>
            Use http <code>DELETE</code> to remove a badge:

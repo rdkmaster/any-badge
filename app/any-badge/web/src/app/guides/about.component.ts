@@ -15,7 +15,7 @@ import {Utils} from "../utils/utils";
 
 @Component({
   template:`
-    <h1>features</h1>
+    <h1>about</h1>
   `
 })
 export class FeaturesComponent {

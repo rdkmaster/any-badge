@@ -6,9 +6,11 @@ import {TranslateService} from "@ngx-translate/core";
   encapsulation: ViewEncapsulation.None
 })
 export class GettingStartedComponent {
-  constructor(private _ts:TranslateService) {
+  sections: string[] = ['signIn', 'createBadge', 'useBadge', 'updateBadge', 'contribute'];
 
+  constructor(private _ts: TranslateService) {
   }
+
   switchLang() {
     this._ts.setDefaultLang(this._ts.getDefaultLang() == 'en' ? 'zh' : 'en');
   }

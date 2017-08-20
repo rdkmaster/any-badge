@@ -10,11 +10,13 @@ import {AuthService} from "../services/auth.service";
       <h2>
         Put any badges to your projects in seconds
       </h2>
-      <div class="links">
-        <jigsaw-button width="130px" routerLink="/badges" colorType="danger" preSize="large">
+      <div class="buttons">
+        <jigsaw-button width="180px" routerLink="/badges" colorType="danger" preSize="large">
           <span class="text">My Badges</span>
         </jigsaw-button>
-        <jigsaw-button width="130px" preSize="large"><span class="text">Demos</span></jigsaw-button>
+        <jigsaw-button width="180px" routerLink="/guides/getting-started" preSize="large">
+          <span class="text">Getting Started</span>
+        </jigsaw-button>
       </div>
     </div>
   `,
@@ -25,7 +27,7 @@ import {AuthService} from "../services/auth.service";
       text-align: center;
     }
 
-    .links {
+    .buttons {
       margin-top: 36px;
       font-size: 85px;
     }

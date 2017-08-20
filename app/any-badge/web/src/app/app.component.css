@@ -23,7 +23,7 @@
 .nav-bar {
   display: inline-block;
   float: right;
-  margin-right: 6px
+  margin: -4px 6px 0 0;
 }
 
 .nav-bar a, .nav-bar a:hover, .nav-bar a:focus {

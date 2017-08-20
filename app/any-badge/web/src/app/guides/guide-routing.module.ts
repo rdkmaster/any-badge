@@ -1,12 +1,12 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {GettingStartedComponent} from "./getting-started.component";
-import {FeaturesComponent} from "./features.component";
+import {FeaturesComponent} from "./about.component";
 
 
 const routes: Routes = [
   {path: 'getting-started', component: GettingStartedComponent},
-  {path: 'features', component: FeaturesComponent},
+  {path: 'about', component: FeaturesComponent},
 ];
 
 @NgModule({

@@ -30,6 +30,6 @@ export class CookieUtils {
 export class Utils {
   public static isValidSubject(tableData:TableData, row:number):boolean {
     const rowData:TableMatrixRow = tableData.data[row];
-    return !!rowData[1].toString().match(/^[a-z0-9-_]+$/i);
+    return !!rowData[1].toString().match(/^[a-z0-9-_][a-z0-9-_ ]+[a-z0-9-_]$/i);
   }
 }

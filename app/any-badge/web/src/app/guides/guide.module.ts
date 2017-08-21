@@ -48,7 +48,7 @@ export class GuideModule {
           一旦你成功登录了 Any Badge，你就可以通过主页上的“My Badge”链接跳转到你的<a href="/badges">徽章列表</a>，
           你可以在那里完成徽章的增删改查，请随意创建任何你想要的徽章吧。下面这个图片介绍了如何使用这个功能：
           </p>
-          <p class="guides-img-wrapper"><img src="/assets/badges-table.png"></p>
+          <p class="guides-img-wrapper"><img src="${document.baseURI}assets/badges-table.png"></p>
         `
       },
       useBadge: {
@@ -58,7 +58,7 @@ export class GuideModule {
           单击<a href="/badges">徽章列表</a>中的 <i class="fa fa-copy"></i> 图标，
           一个包含如何使用此徽章的链接的对话框会弹出来。
           </p>
-          <p class="guides-img-wrapper"><img src="/assets/copy-badge.png"></p>
+          <p class="guides-img-wrapper"><img src="${document.baseURI}assets/copy-badge.png"></p>
           <p>
           拷贝 markdown 格式的链接文本到你的工程的README文档，保存之后，你的徽章应该就可以被显示出来了。
           注意：url中的 private key 与你的账号绑定了，最好能够对它保密，你可以在 <a href="/account">account view</a>
@@ -150,7 +150,7 @@ export class GuideModule {
           you can create or modify or remove the badges there. Feel free to create any badge
           you want. The following picture explains everything:
           </p>
-          <p class="guides-img-wrapper"><img src="/assets/badges-table.png"></p>
+          <p class="guides-img-wrapper"><img src="${document.baseURI}assets/badges-table.png"></p>
         `
       },
       useBadge: {
@@ -160,7 +160,7 @@ export class GuideModule {
           Click the <i class="fa fa-copy"></i> icon in the <a href="/badges">badges list</a>,
           Any Badge will popup a dialog, in which shows the link of the current badge:
           </p>
-          <p class="guides-img-wrapper"><img src="/assets/copy-badge.png"></p>
+          <p class="guides-img-wrapper"><img src="${document.baseURI}assets/copy-badge.png"></p>
           <p>
           Copy the markdown formatted link text or the svg image url to your project readme file and
           the badge should display. Notice that the private key in the url is bound to your account,

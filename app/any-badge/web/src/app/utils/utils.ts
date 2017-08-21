@@ -19,7 +19,7 @@ export class CookieUtils {
   }
 
   public static put(key: string, value: string|number|boolean): void {
-    document.cookie = `${key}=${value};`;
+    document.cookie = `${key}=${value};path=/`;
   }
 
   public static del(key: string):void {

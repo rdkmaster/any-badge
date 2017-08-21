@@ -27,7 +27,6 @@ export class AuthService {
   public nickName: string = 'unknown user';
   public privateKey:string = 'invalid private key';
   public description:string = '';
-  public password:string = '';
 
   private _promise: Promise<boolean>;
 
@@ -49,6 +48,7 @@ export class AuthService {
             this.privateKey = this.isLoggedIn ? result.detail.privateKey : 'unknown private key';
             this.description = this.isLoggedIn ? result.detail.description : '';
             resolve(this.isLoggedIn);
+            this._promise = null;
           });
       });
     }

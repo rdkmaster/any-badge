@@ -279,6 +279,9 @@ export class BadgeListComponent implements OnInit {
     this.badges.http = http;
     this.badges.dataReviser = (data) => {
       tableDataBackup.splice(0, tableDataBackup.length);
+      if (!data.data) {
+        data.data = [];
+      }
       data.header = ['Badge', 'Subject', 'Subject Color', 'Status', 'Status Color', 'Description'];
       data.field = ['badge', 'subject', 'subject_color', 'status', 'status_color', 'description'];
       data.data.forEach(item => {
@@ -287,7 +290,6 @@ export class BadgeListComponent implements OnInit {
         tableDataBackup.push(item.concat());
         shared.push({tooltip: '', svgUrl: svg, bgColor: {'background-color': ''}});
       });
-      this
       return data;
     }
   }

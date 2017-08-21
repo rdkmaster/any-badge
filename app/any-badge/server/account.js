@@ -20,7 +20,6 @@ description text(256));
                 return {error:450, detail: 'bad user parameters'};
             }
 
-            Data.useDataSource('mysql_any_badge');
             var r = Data.fetch('select name from user where name="' + req.name + '" or nick_name="' + req.nickName + '"');
             if (r.data.length > 0) {
                 return {error:451, detail: 'user has already exist'};
@@ -74,7 +73,6 @@ description text(256));
             }
             sql += ' where id=' + owner;
 
-            Data.useDataSource('mysql_any_badge');
             if (req.password) {
                 var checkUserSql = 'select password from user where id=' + owner +
                                     ' and password="' + req.password + '"';
@@ -103,7 +101,6 @@ description text(256));
                 return {error: 454, detail: 'not login'};
             }
 
-            Data.useDataSource('mysql_any_badge');
             var r = Data.update('delete from user where id=' + owner + ' and password="' + req.password + '";');
             if (r.hasOwnProperty('error')) {
                 return {error: 457, detail: r.detail};

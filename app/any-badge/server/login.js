@@ -10,7 +10,6 @@
                 return {error: 454, detail: 'not login'};
             }
 
-            Data.useDataSource('mysql_any_badge');
             var r = Data.fetch('select nick_name,private_key,description from user where id=' + owner);
             if (r.hasOwnProperty('error') || r.data.length == 0) {
                 Log.error('internal error, unknown owner = ' + owner);
@@ -33,7 +32,6 @@
             }
 
             log('user:', req.name, ',', 'pwd:', req.password);
-            Data.useDataSource('mysql_any_badge');
             var r = Data.fetch('select nick_name,private_key,description,id from user where name="' +
                 req.name + '" and password="' + req.password + '"');
             if (r.data.length == 0) {

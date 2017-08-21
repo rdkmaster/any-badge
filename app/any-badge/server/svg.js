@@ -101,7 +101,6 @@
             return genSvg('Error', '#555', req.privateKey ? 'invalid private key' : 'need a private key', 'bad');
         }
 
-        Data.useDataSource('mysql_any_badge');
         var sql = 'select subject,subject_color,status,status_color from badge where owner=' +
                   owner + ' and subject="' + req.subject + '";';
         var data = Data.fetch(sql);

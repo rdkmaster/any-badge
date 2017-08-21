@@ -17,7 +17,6 @@ description text(256));
         var owner = _getOwner(req.privateKey);
         if (owner.hasOwnProperty('error')) return owner;
 
-        Data.useDataSource('mysql_any_badge');
         var sql = 'select subject,subject_color,status,status_color,description from badge where owner=' + owner;
         req.subject = req.subject ? req.subject.trim() : '';
         if (req.subject) {
@@ -37,7 +36,6 @@ description text(256));
         var owner = _getOwner(req.privateKey);
         if (owner.hasOwnProperty('error')) return owner;
 
-        Data.useDataSource('mysql_any_badge');
         var r = Data.fetch('select id, subject from badge where owner=' + owner + ' and subject="' + req.subject + '"');
         if (r.data.length > 0) {
             return {error:463, detail: 'subject has already exist'};
@@ -77,7 +75,6 @@ description text(256));
             return {error: 466, detail: 'invalid param, unknown what to update'};
         }
 
-        Data.useDataSource('mysql_any_badge');
 
         r = Data.update('update badge set status="' + req.status +
             '", status_color="' + req.statusColor +
@@ -101,7 +98,6 @@ description text(256));
             return {error: 465, detail: 'subject[' + req.subject + '] not found'}
         }
 
-        Data.useDataSource('mysql_any_badge');
         var r = Data.update('delete from badge where subject="' + req.subject.trim() + '"');
         if (r.hasOwnProperty('error')) {
             return {error:468, detail: 'delete badge error, detail: ' + r.error};

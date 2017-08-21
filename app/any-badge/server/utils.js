@@ -58,8 +58,7 @@
         if (owner) {
             return owner;
         }
-
-        Data.useDataSource('mysql_any_badge');
+        
         var r = Data.fetch('select id from user where private_key="' + privateKey + '"');
         if (r.hasOwnProperty('error') || r.data.length == 0) {
             Log.error('unable to get id from privateKey[' + privateKey + '], detail: ' + r);

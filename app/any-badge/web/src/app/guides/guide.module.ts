@@ -45,7 +45,7 @@ export class GuideModule {
         header: '创建徽章',
         detail: `
           <p>
-          一旦你成功登录了 Any Badge，你就可以通过主页上的“My Badge”链接跳转到你的<a href="/badges">徽章列表</a>，
+          一旦你成功登录了 Any Badge，你就可以通过主页上的“My Badge”链接跳转到你的<a href="#/badges">徽章列表</a>，
           你可以在那里完成徽章的增删改查，请随意创建任何你想要的徽章吧。下面这个图片介绍了如何使用这个功能：
           </p>
           <p class="guides-img-wrapper"><img src="${document.baseURI}assets/badges-table.png"></p>
@@ -55,13 +55,13 @@ export class GuideModule {
         header: '使用徽章',
         detail: `
           <p>
-          单击<a href="/badges">徽章列表</a>中的 <i class="fa fa-copy"></i> 图标，
+          单击<a href="#/badges">徽章列表</a>中的 <i class="fa fa-copy"></i> 图标，
           一个包含如何使用此徽章的链接的对话框会弹出来。
           </p>
           <p class="guides-img-wrapper"><img src="${document.baseURI}assets/copy-badge.png"></p>
           <p>
           拷贝 markdown 格式的链接文本到你的工程的README文档，保存之后，你的徽章应该就可以被显示出来了。
-          注意：url中的 private key 与你的账号绑定了，最好能够对它保密，你可以在 <a href="/account">account view</a>
+          注意：url中的 private key 与你的账号绑定了，最好能够对它保密，你可以在 <a href="#/account">account view</a>
           中修改它。
           </p>
         `
@@ -70,7 +70,7 @@ export class GuideModule {
         header: '随时随地更新徽章',
         detail: `
           <p>
-          虽然你可以在<a href="/badges">徽章列表</a>中手工对徽章的状态做修改，但是 Any Badge 提供了一个更好的方式来做这事，
+          虽然你可以在<a href="#/badges">徽章列表</a>中手工对徽章的状态做修改，但是 Any Badge 提供了一个更好的方式来做这事，
           这也我们推荐的方式。对下面的 url 发出一个 <code>PUT</code> 请求：
           </p>
           <p class="guides-code-block">http://rdkmaster.com/rdk/service/app/any-badge/server/badge</p>
@@ -146,7 +146,7 @@ export class GuideModule {
         detail: `
           <p>
           Once you'v logged in Any Badge successfully, you can follow the "My Badges" link
-          in the front page of Any Badge to check your <a href="/badges">badges list</a>,
+          in the front page of Any Badge to check your <a href="#/badges">badges list</a>,
           you can create or modify or remove the badges there. Feel free to create any badge
           you want. The following picture explains everything:
           </p>
@@ -157,14 +157,14 @@ export class GuideModule {
         header: 'Put the badge to your project',
         detail: `
           <p>
-          Click the <i class="fa fa-copy"></i> icon in the <a href="/badges">badges list</a>,
+          Click the <i class="fa fa-copy"></i> icon in the <a href="#/badges">badges list</a>,
           Any Badge will popup a dialog, in which shows the link of the current badge:
           </p>
           <p class="guides-img-wrapper"><img src="${document.baseURI}assets/copy-badge.png"></p>
           <p>
           Copy the markdown formatted link text or the svg image url to your project readme file and
           the badge should display. Notice that the private key in the url is bound to your account,
-          it is good to keep it private. You can change it in <a href="/account">the account view</a>.
+          it is good to keep it private. You can change it in <a href="#/account">the account view</a>.
           </p>
         `
       },
@@ -172,7 +172,7 @@ export class GuideModule {
         header: 'Update the badges anytime and anywhere',
         detail: `
           <p>
-          Although you can update your badges in the <a href="/badges">badges list</a> manually,
+          Although you can update your badges in the <a href="#/badges">badges list</a> manually,
           but Any Badge provides a http api, which is a better and recommended way to do this. Just simply
           issue a http <code>PUT</code> request to the following url:
           </p>

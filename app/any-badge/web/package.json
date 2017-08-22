@@ -5,7 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --poll 500 --proxy-config proxy-config.json",
-    "build": "ng build -prod -aot --output-hashing=bundles --base-href /jigsaw/any-badge/ --output-path /home/www/jigsaw/any-badge --delete-output-path",
+    "build": "ng build -prod -aot --base-href /jigsaw/any-badge/ --output-path /home/www/jigsaw/any-badge --delete-output-path",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

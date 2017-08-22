@@ -42,7 +42,8 @@ export class CopyBadgeComponent extends DialogBase {
   markdownLink:string = '';
 
   set initData(value) {
-    this.svgUrl = `http://rdkmaster.com/rdk/service/app/any-badge/server/svg?subject=${value.subject}&privateKey=${value.privateKey}`;
+    const subject = value.subject.replace(/[^a-zA-Z0-9-_]/g, found => '%' + found.charCodeAt(0).toString(16));
+    this.svgUrl = `http://rdkmaster.com/rdk/service/app/any-badge/server/svg?subject=${subject}&privateKey=${value.privateKey}`;
     this.markdownLink = `[![${value.subject} not found](${this.svgUrl})](https://github.com/rdkmaster/any-badge)`;
   }
 }

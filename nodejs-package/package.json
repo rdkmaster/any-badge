@@ -1,0 +1,34 @@
+{
+  "name": "@rdkmaster/any-badge",
+  "version": "1.0.0-beta.1",
+  "preferGlobal": "true",
+  "description": "The nodejs api of Jigdaw Any Badge. Jigdaw Any Badge ia an online service for making highly customized badges, which supports to update the status of badges anytime and anywhere. You can create/update/delete/query badges with this api.",
+  "main": "index.js",
+  "engines": {
+    "node": "*"
+  },
+  "bin": {
+    "any-badge": "index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rdkmaster/any-badge.git"
+  },
+  "keywords": [
+    "badge",
+    "github",
+    "angular",
+    "jigsaw",
+    "七巧板",
+    "gitlab"
+  ],
+  "author": "陈旭",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rdkmaster/any-badge/issues"
+  },
+  "homepage": "http://rdk.zte.com.cn/jigsaw/any-badge"
+}

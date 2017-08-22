@@ -18,7 +18,7 @@ And, we made some more badges maybe useful too:
 [![Loving not found](http://rdkmaster.com/rdk/service/app/any-badge/server/svg?subject=Loving&privateKey=qgvxHISQ-Zi8LZ3Wc-OihYOz7U-uik3BA9l)](https://github.com/rdkmaster/any-badge)
 
 ## Getting Started
-[here](http://rdk.zte.com.cn/jigsaw/any-badge/guides/getting-started)
+<http://rdk.zte.com.cn/jigsaw/any-badge#/guides/getting-started>
 
 ## About Any Badge
 

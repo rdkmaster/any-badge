@@ -1,44 +1,46 @@
-<div class="title">
-  <div class="logo">
-    <h1><a routerLink="/" (click)="changeColor()">
-      <img style="width: 238px;height: 40px;" [src]="logoSvg">
-    </a></h1>
-  </div>
+<jigsaw-root>
+  <div class="title">
+    <div class="logo">
+      <h1><a routerLink="/" (click)="changeColor()">
+        <img style="width: 238px;height: 40px;" [src]="logoSvg">
+      </a></h1>
+    </div>
 
-  <div class="nav-bar">
-    <ul class="nav navbar-nav navbar-right">
-      <li><a routerLink="/guides/getting-started">
-        <i class="fa fa-coffee"></i> Getting Started
-      </a></li>
-      <li><a routerLink="/badges">
-        <i class="fa fa-list"></i> Badges
-      </a></li>
-      <li><a href="https://github.com/rdkmaster/any-badge" target="_blank">
-        <i class="fa fa-github"></i> Github
-      </a></li>
-      <li><a href="https://github.com/rdkmaster/jigsaw" target="_blank">
-        <i class="fa fa-github"></i> Jigsaw
-      </a></li>
-      <li><a routerLink="/guides/about">
-        <i class="fa fa-lemon-o"></i> About
-      </a></li>
-      <li *ngIf="!authService.isLoggedIn"><a routerLink="/login" routerLinkActive="active">
-        <i class="fa fa-user-o"></i> Login / Sign Up
-      </a></li>
-      <li *ngIf="authService.isLoggedIn" (mouseenter)="showMenu(menu, menuDocker)" (mouseleave)="hideMenuLater()"><a>
-        <i class="fa fa-user-o"></i>
-        <jigsaw-tag color="#ec6d6d">{{authService.nickName}}
-          <i #menuDocker class="fa fa-angle-down" style="cursor: pointer"></i>
-        </jigsaw-tag>
-      </a></li>
+    <div class="nav-bar">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a routerLink="/guides/getting-started">
+          <i class="fa fa-coffee"></i> Getting Started
+        </a></li>
+        <li><a routerLink="/badges">
+          <i class="fa fa-list"></i> Badges
+        </a></li>
+        <li><a href="https://github.com/rdkmaster/any-badge" target="_blank">
+          <i class="fa fa-github"></i> Github
+        </a></li>
+        <li><a href="https://github.com/rdkmaster/jigsaw" target="_blank">
+          <i class="fa fa-github"></i> Jigsaw
+        </a></li>
+        <li><a routerLink="/guides/about">
+          <i class="fa fa-lemon-o"></i> About
+        </a></li>
+        <li *ngIf="!authService.isLoggedIn"><a routerLink="/login" routerLinkActive="active">
+          <i class="fa fa-user-o"></i> Login / Sign Up
+        </a></li>
+        <li *ngIf="authService.isLoggedIn" (mouseenter)="showMenu(menu, menuDocker)" (mouseleave)="hideMenuLater()"><a>
+          <i class="fa fa-user-o"></i>
+          <jigsaw-tag color="#ec6d6d">{{authService.nickName}}
+            <i #menuDocker class="fa fa-angle-down" style="cursor: pointer"></i>
+          </jigsaw-tag>
+        </a></li>
+      </ul>
+    </div>
+  </div>
+  <router-outlet></router-outlet>
+
+  <ng-template #menu>
+    <ul class="menu" (mouseenter)="onMenuMouseEnter()" (mouseleave)="hideMenuLater()">
+      <li routerLink="/account"><i class="fa fa-address-card-o" style="width:16px"></i> Account</li>
+      <li (click)="authService.logout()"><i class="fa fa-power-off" style="width:16px"></i> Logout</li>
     </ul>
-  </div>
-</div>
-<router-outlet></router-outlet>
-
-<ng-template #menu>
-  <ul class="menu" (mouseenter)="onMenuMouseEnter()" (mouseleave)="hideMenuLater()">
-    <li routerLink="/account"><i class="fa fa-address-card-o" style="width:16px"></i> Account</li>
-    <li (click)="authService.logout()"><i class="fa fa-power-off" style="width:16px"></i> Logout</li>
-  </ul>
-</ng-template>
+  </ng-template>
+</jigsaw-root>

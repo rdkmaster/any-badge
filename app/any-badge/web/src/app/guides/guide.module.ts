@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from "@angular/common";
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
-import {JigsawScrollBarModule} from "@rdkmaster/jigsaw";
+import {JigsawScrollbarModule} from "@rdkmaster/jigsaw";
 
 import {GettingStartedComponent} from "./getting-started.component";
 import {AboutComponent} from "./about.component";
@@ -10,7 +10,7 @@ import {GuideRoutingModule} from "./guide-routing.module";
 
 @NgModule({
   imports: [
-    GuideRoutingModule, JigsawScrollBarModule, TranslateModule.forRoot(), CommonModule
+    GuideRoutingModule, JigsawScrollbarModule, TranslateModule.forRoot(), CommonModule
   ],
   declarations: [
     GettingStartedComponent, AboutComponent

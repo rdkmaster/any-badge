@@ -1,10 +1,17 @@
 import {NgModule} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
-import {HttpModule} from "@angular/http";
+import {HttpClientModule} from "@angular/common/http";
 import {
-  JigsawButtonModule, JigsawCheckBoxModule, JigsawDialogModule, JigsawInputModule,
-  JigsawTooltipModule, PopupService, JigsawScrollBarModule, LoadingService, JigsawLoadingModule
+  JigsawButtonModule,
+  JigsawCheckBoxModule,
+  JigsawDialogModule,
+  JigsawInputModule,
+  JigsawLoadingModule,
+  JigsawScrollbarModule,
+  JigsawTooltipModule,
+  LoadingService,
+  PopupService
 } from "@rdkmaster/jigsaw";
 import {LoginRoutingModule} from "./user-man-routing.module";
 import {LoginComponent} from "./login.component";
@@ -14,9 +21,9 @@ import {AccountComponent, ConfirmDialog} from "./account.component";
 
 @NgModule({
   imports: [
-    CommonModule, HttpModule, LoginRoutingModule, FormsModule,
+    CommonModule, HttpClientModule, LoginRoutingModule, FormsModule,
     JigsawInputModule, JigsawButtonModule, JigsawCheckBoxModule, JigsawTooltipModule,
-    JigsawDialogModule, JigsawScrollBarModule, JigsawLoadingModule
+    JigsawDialogModule, JigsawScrollbarModule, JigsawLoadingModule
   ],
   declarations: [LoginComponent, SignUpComponent, AccountComponent, ConfirmDialog],
   providers: [AuthService, PopupService, LoadingService],

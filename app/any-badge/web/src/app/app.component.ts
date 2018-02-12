@@ -1,7 +1,7 @@
 import {Component, OnInit, Renderer2, ViewContainerRef} from '@angular/core';
 import {AuthService} from "./services/auth.service";
 import {Router} from "@angular/router";
-import {PopupInfo, PopupService} from "@rdkmaster/jigsaw";
+import {PopupInfo, PopupPosition, PopupService} from "@rdkmaster/jigsaw";
 
 @Component({
   selector: 'jigsaw-any-badge',
@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
     if (this._popupInfo) {
       this._popupInfo.dispose();
     }
-    this._popupInfo = this._popupService.popup(menu, {
+    this._popupInfo = this._popupService.popup(menu, <any>{
       modal: false, pos: menuDocker, posOffset: {top: 36, right: 15}
     });
   }

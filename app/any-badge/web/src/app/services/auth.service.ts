@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Router} from "@angular/router";
+import {HttpClient} from "@angular/common/http";
 
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
@@ -8,7 +9,6 @@ import 'rxjs/add/operator/delay';
 
 import {HttpResult} from "../utils/typings";
 import {CookieUtils} from "../utils/utils";
-import {Http, RequestOptionsArgs} from "@angular/http";
 
 export type AccountInfo = {
   password?: string,
@@ -20,7 +20,7 @@ export type AccountInfo = {
 
 @Injectable()
 export class AuthService {
-  constructor(private _http: Http, private _router: Router) {
+  constructor(private _http: HttpClient, private _router: Router) {
   }
 
   public isLoggedIn = false;
@@ -41,8 +41,7 @@ export class AuthService {
     if (!this._promise) {
       this._promise = new Promise<boolean>(resolve => {
         this._http.get('/rdk/service/app/any-badge/server/login')
-          .map(resp => resp.json())
-          .subscribe(result => {
+          .subscribe((result: any) => {
             this.isLoggedIn = result.error == 0;
             this.nickName = this.isLoggedIn ? result.detail.nickName : 'unknown user';
             this.privateKey = this.isLoggedIn ? result.detail.privateKey : 'unknown private key';
@@ -58,7 +57,6 @@ export class AuthService {
   public login(name: string, password: string): Observable<string> {
     const url = '/rdk/service/app/any-badge/server/login';
     return this._http.post(url, {name: name, password: password})
-      .map(resp => resp.json())
       .map((result: HttpResult) => {
       this.isLoggedIn = result.error == 0;
 
@@ -76,11 +74,10 @@ export class AuthService {
   public logout(): void {
     const url = '/rdk/service/app/any-badge/server/logout';
     this._http.post(url, {})
-      .map(resp => resp.json())
-      .subscribe(result => {
+      .subscribe((result:any) => {
         CookieUtils.del('session');
         this.nickName = 'unknown user';
-        if (result.error > 0) {
+        if (result.error) {
           console.error(result);
         }
       });
@@ -98,15 +95,15 @@ export class AuthService {
     const param: any = {
       name: user, password: password, nickName: nick, description: description
     };
-    return this._http.post(url, param).map(r => r.json()).map(result => result.error > 0 ? result.detail : '');
+    return this._http.post(url, param).map((result: any) => result.error > 0 ? result.detail : '');
   }
 
-  public changeAccountInfo(info: AccountInfo): Observable<HttpResult> {
-    return this._http.put('/rdk/service/app/any-badge/server/account', info).map(r => r.json());
+  public changeAccountInfo(info: AccountInfo): Observable<any> {
+    return this._http.put('/rdk/service/app/any-badge/server/account', info);
   }
 
-  public deleteAccount(password:string) : Observable<HttpResult> {
-    let opt = <RequestOptionsArgs>{body: {password: password}};
-    return this._http.delete('/rdk/service/app/any-badge/server/account', opt).map(r => r.json());
+  public deleteAccount(password:string) : Observable<any> {
+    // let opt = <RequestOptionsArgs>{body: {password: password}};
+    return this._http.delete('/rdk/service/app/any-badge/server/account', {params: {password: password}});
   }
 }

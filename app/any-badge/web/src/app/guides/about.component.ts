@@ -3,7 +3,7 @@ import {Component, ViewEncapsulation} from '@angular/core';
 
 @Component({
   template:`
-    <div class="guides-container" jigsawScrollBar scrollBarAxis="y" [scrollBarSnapAmount]="10" [scrollBarScrollAmount]="80">
+    <div class="guides-container" jigsawScrollBar scrollBarAxis="y">
       <div class="guides-section">
         <h3>About the purpose</h3>
         <p>

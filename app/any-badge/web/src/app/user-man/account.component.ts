@@ -27,6 +27,10 @@ enum ConfirmType {
         <span>Enter your password to confirm:</span>
         <jigsaw-input (valueChange)="onInput()" [(value)]="password"></jigsaw-input>
       </div>
+      <div jigsaw-button-bar>
+        <jigsaw-button disabled="disabled" colorType="warning">OK</jigsaw-button>
+        <jigsaw-button colorType="warning" (click)="dispose()">Cancel</jigsaw-button>
+      </div>
     </jigsaw-dialog>
   `,
   styles: [`
@@ -49,10 +53,7 @@ export class ConfirmDialog extends DialogBase implements AfterContentInit {
   @ViewChild(JigsawInput) input: JigsawInput;
   password: string;
   message: string = 'Please process with caution.';
-
-  buttons: ButtonInfo[] = [
-    {label: 'OK', type: 'warning', disabled: true}, {label: 'Cancel'},
-  ];
+  disabled = true;
 
   set initData(value: ConfirmType) {
     this.message = value == ConfirmType.changePrivateKey ?
@@ -66,7 +67,7 @@ export class ConfirmDialog extends DialogBase implements AfterContentInit {
   }
 
   onInput() {
-    setTimeout(() => this.buttons[0].disabled = !this.password);
+    setTimeout(() => this.disabled = !this.password);
   }
 
   ngAfterContentInit() {

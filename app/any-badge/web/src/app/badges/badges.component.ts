@@ -1,28 +1,27 @@
 import 'rxjs/add/operator/switchMap';
-import {Http, RequestOptionsArgs} from "@angular/http";
-import {AfterViewInit, Component, ElementRef, OnInit, Renderer2, TemplateRef, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, Renderer2, TemplateRef, ViewChild} from '@angular/core';
 import {
-  AdditionalColumnDefine,
-  ColumnDefine,
-  JigsawErrorAlert, JigsawInput, LoadingService, PopupInfo,
-  PopupService,
-  TableCellEditor,
-  TableCellRenderer,
+  JigsawErrorAlert, JigsawInput, LoadingService, PopupInfo, PopupOptions,
+  PopupService, TableCellRendererBase, TableCellTextEditorRenderer,
   TableData, TableDataChangeEvent, TableDataMatrix
 } from "@rdkmaster/jigsaw";
 import {HttpResult} from "../utils/typings";
 import {Utils} from "../utils/utils";
 import {CopyBadgeComponent} from "./copy-badge.component";
 import {AuthService} from "../services/auth.service";
+import {HttpClient} from "@angular/common/http";
 
-type SharedInfo = { tooltip: string, svgUrl: string, bgColor: { 'background-color': string } };
+enum BadgeEvent {
+  updateSvg, newBadgeAdded
+}
 
 const tableDataBackup: TableDataMatrix = [];
-const shared: SharedInfo[] = [];
+
+// const shared: SharedInfo[] = [];
 
 @Component({
   template: `
-    <span [ngStyle]="shared[row]?.bgColor" [jigsawTooltip]="shared[row]?.tooltip">
+    <span [ngStyle]="bgColor" [jigsawTooltip]="tooltip">
       <a (click)="saveBadge(tableData, row)">
         <i class="fa fa-floppy-o"></i>
       </a>
@@ -46,7 +45,7 @@ const shared: SharedInfo[] = [];
     a {
       font-size: 15px;
     }
-    
+
     a:last-child {
       margin-left: 8px;
     }
@@ -56,15 +55,37 @@ const shared: SharedInfo[] = [];
     }
   `]
 })
-export class OperationTableCell extends TableCellRenderer {
-  // the template can not directly read the global object, use this property to make sure
-  // the template can access to the `shared` object
-  public shared = shared;
-  @ViewChild('confirm') confirmDialog:TemplateRef<any>;
+export class OperationTableCell extends TableCellRendererBase implements OnInit, OnDestroy {
+  @ViewChild('confirm') confirmDialog: TemplateRef<any>;
+  public tooltip: string = '';
+  public bgColor = {'background-color': ''};
+  private _subscription;
 
-  constructor(private _http: Http, private _popupService: PopupService, private _renderer:Renderer2,
-              private _authService:AuthService, private _loading: LoadingService) {
+  constructor(private _http: HttpClient, private _popupService: PopupService, private _renderer: Renderer2,
+              private _authService: AuthService, private _loading: LoadingService) {
     super();
+  }
+
+  public ngOnInit() {
+    this._subscription = this.tableData.subscribe(change => {
+
+      if (change == BadgeEvent.newBadgeAdded) {
+        this.tooltip = 'Invalid subject, these chars only:<br>a-z 0-9 - _';
+        this.bgColor = {'background-color': '#F6EBBC'};
+      } else if (change.hasOwnProperty('row') && change.row[0] == this.row) {
+        // we do not care the other row's change.
+        // notice: we can't use `change instanceof TableDataChangeEvent` here to check the type of `change`
+        // this maybe a bug of typescript, because that Jigsaw do emmit a `TableDataChangeEvent` value.
+
+        this.tooltip = Utils.isValidSubject(this.tableData, this.row) ?
+          'Unsaved change found, click the save<br>button to save your change.' :
+          'Invalid subject, these chars only:<br>a-z 0-9 - _';
+
+        const row1 = this.tableData.data[this.row];
+        const row2 = tableDataBackup[this.row];
+        this.bgColor['background-color'] = !row1 || !row2 || row1.toString() !== row2.toString() ? '#F6EBBC' : '';
+      }
+    });
   }
 
   public saveBadge(tableData: TableData, row: number) {
@@ -75,27 +96,27 @@ export class OperationTableCell extends TableCellRenderer {
     const rowData = tableData.data[row];
     const method = tableDataBackup[row] ? 'put' : 'post';
     this._http[method]('/rdk/service/app/any-badge/server/badge', {
-      subject: rowData[1], subjectColor: rowData[2], status: rowData[3], statusColor: rowData[4], description: rowData[5]
+      subject: rowData[1],
+      subjectColor: rowData[2],
+      status: rowData[3],
+      statusColor: rowData[4],
+      description: rowData[5]
     })
-      .map(resp => resp.json())
       .subscribe((result: HttpResult) => {
         blockInfo.dispose();
         if (result.error) {
-          const popupInfo = this._popupService.popup(JigsawErrorAlert, {}, {
-            message: 'Unable to save your change! Detail: ' + result.detail
-          });
-          popupInfo.answer.subscribe(() => popupInfo.dispose());
+          JigsawErrorAlert.show('Unable to save your change! Detail: ' + result.detail);
         } else {
           tableDataBackup[row] = rowData.concat();
-          shared[row].tooltip = '';
-          shared[row].bgColor['background-color'] = '';
-          //change the time stamp to force the browser to refresh the svg
-          shared[row].svgUrl = `/rdk/service/app/any-badge/server/svg?subject=${rowData[1]}&_=${+new Date}`;
+          this.tooltip = '';
+          this.bgColor['background-color'] = '';
+          // tell the svg cell to update the picture.
+          this.tableData.emit(BadgeEvent.updateSvg);
         }
       });
   }
 
-  private _confirmDialogInfo:PopupInfo;
+  private _confirmDialogInfo: PopupInfo;
 
   public closeConfirmDialog() {
     if (this._confirmDialogInfo) {
@@ -103,13 +124,14 @@ export class OperationTableCell extends TableCellRenderer {
     }
   }
 
-  public removeBadge(event:MouseEvent) {
+  public removeBadge(event: MouseEvent) {
     this.closeConfirmDialog();
-    this._confirmDialogInfo = this._popupService.popup(this.confirmDialog, {
+    const option: any = {
       modal: false,
-      pos:{ x:event.clientX, y:event.clientY },
-      posOffset: { top: -130, left: -15 }
-    });
+      pos: {x: event.clientX, y: event.clientY},
+      posOffset: {top: -130, left: -15}
+    };
+    this._confirmDialogInfo = this._popupService.popup(this.confirmDialog, option);
     const removeEvent = this._renderer.listen(window, 'click', (event1) => {
       if (event.target === event1.target) {
         return;
@@ -129,10 +151,11 @@ export class OperationTableCell extends TableCellRenderer {
    * because that after whatever you clicked in the tooltip dialog, we will need to dispose the dialog.
    * but since this is a teaching project, I'll still show you how in case you have to do this in your case.
    * @param {MouseEvent} event
+   * @param dialogElement
    * @returns {boolean}
    * @private
    */
-  private _isInTooltipDialog(event, dialogElement):boolean {
+  private _isInTooltipDialog(event, dialogElement): boolean {
     return event.path.indexOf(dialogElement) != -1;
   }
 
@@ -141,7 +164,6 @@ export class OperationTableCell extends TableCellRenderer {
     const rowData = tableDataBackup[row];
     if (!rowData) {
       //not being saved yet
-      shared.splice(row, 1);
       tableDataBackup.splice(row, 1);
       tableData.data.splice(row, 1);
       tableData.refresh();
@@ -149,18 +171,12 @@ export class OperationTableCell extends TableCellRenderer {
     }
 
     const blockInfo = this._loading.show();
-    let opt = <RequestOptionsArgs>{body: {subject: rowData[1]}};
-    this._http.delete('/rdk/service/app/any-badge/server/badge', opt)
-      .map(resp => resp.json())
+    this._http.delete('/rdk/service/app/any-badge/server/badge', {params: {subject: rowData[1]}})
       .subscribe((result: HttpResult) => {
         blockInfo.dispose();
         if (result.error) {
-          const popupInfo = this._popupService.popup(JigsawErrorAlert, {}, {
-            message: 'Unable to delete the badge! Detail: ' + result.detail
-          });
-          popupInfo.answer.subscribe(() => popupInfo.dispose());
+          JigsawErrorAlert.show('Unable to delete the badge! Detail: ' + result.detail);
         } else {
-          shared.splice(row, 1);
           tableDataBackup.splice(row, 1);
           tableData.data.splice(row, 1);
           tableData.refresh();
@@ -169,19 +185,37 @@ export class OperationTableCell extends TableCellRenderer {
   }
 
   public popCopyDialog(tableData: TableData, row: number) {
-    this._popupService.popup(CopyBadgeComponent, {}, {
+    this._popupService.popup(CopyBadgeComponent, null, {
       subject: this.tableData.data[this.row][1], privateKey: this._authService.privateKey
     });
+  }
+
+  public ngOnDestroy() {
+    //don't forget to remove the subscription while the cell is destroyed.
+    this._subscription.unsubscribe();
   }
 }
 
 @Component({
-  template: '<img src="{{shared[row]?.svgUrl}}">'
+  template: `<img [src]="this.tableData.data[this.row][0] + '&_=' + timestamp">`
 })
-export class BadgeSvgTableCell extends TableCellRenderer {
-  // the template can not directly read the global object, use this property to make sure
-  // the template can access to the `shared` object
-  public shared = shared;
+export class BadgeSvgTableCell extends TableCellRendererBase implements OnInit, OnDestroy {
+  public timestamp;
+  private _subscription;
+
+  ngOnInit() {
+    this._subscription = this.tableData.subscribe(change => {
+      if (change == BadgeEvent.updateSvg) {
+        // just simply update the timestamp to force the browser to refresh the picture.
+        this.timestamp = +new Date;
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    //don't forget to remove the subscription while the cell is destroyed.
+    this._subscription.unsubscribe();
+  }
 }
 
 @Component({
@@ -191,7 +225,7 @@ export class BadgeSvgTableCell extends TableCellRenderer {
     </jigsaw-input>
   `
 })
-export class SubjectEditor extends TableCellRenderer implements AfterViewInit {
+export class SubjectEditor extends TableCellRendererBase implements AfterViewInit {
   @ViewChild(JigsawInput) input: JigsawInput;
 
   constructor(private _renderer: Renderer2) {
@@ -219,7 +253,7 @@ export class SubjectEditor extends TableCellRenderer implements AfterViewInit {
 })
 export class BadgeListComponent implements OnInit {
   public badges: TableData = new TableData();
-  public columns: ColumnDefine[] = [
+  public columns = [
     {
       target: 'badge',
       width: '294px',
@@ -238,32 +272,32 @@ export class BadgeListComponent implements OnInit {
       target: 'subject_color', width: '117px',
       cell: {
         editable: true,
-        editorRenderer: TableCellEditor,
+        editorRenderer: TableCellTextEditorRenderer,
       }
     },
     {
       target: 'status', width: '117px',
       cell: {
         editable: true,
-        editorRenderer: TableCellEditor,
+        editorRenderer: TableCellTextEditorRenderer,
       }
     },
     {
       target: 'status_color', width: '117px',
       cell: {
         editable: true,
-        editorRenderer: TableCellEditor,
+        editorRenderer: TableCellTextEditorRenderer,
       }
     },
     {
       target: 'description', width: '117px',
       cell: {
         editable: true,
-        editorRenderer: TableCellEditor,
+        editorRenderer: TableCellTextEditorRenderer,
       }
     }
   ];
-  public additionalColumns: AdditionalColumnDefine[] = [
+  public additionalColumns = [
     {
       width: '69px',
       header: {
@@ -275,7 +309,7 @@ export class BadgeListComponent implements OnInit {
     }
   ];
 
-  constructor(http: Http, private _loading: LoadingService) {
+  constructor(http: HttpClient, private _loading: LoadingService) {
     this.badges.http = http;
     this.badges.dataReviser = (data) => {
       tableDataBackup.splice(0, tableDataBackup.length);
@@ -288,31 +322,22 @@ export class BadgeListComponent implements OnInit {
         const svg = `/rdk/service/app/any-badge/server/svg?subject=${item[0]}`;
         item.unshift(svg);
         tableDataBackup.push(item.concat());
-        shared.push({tooltip: '', svgUrl: svg, bgColor: {'background-color': ''}});
       });
       return data;
     }
   }
 
   public newBadge(): void {
-    shared.push({
-      tooltip: 'Invalid subject, these chars only:<br>a-z 0-9 - _',
-      svgUrl: '/rdk/service/app/any-badge/server/svg?subject=new&privateKey=jigsaw-any-badge',
-      bgColor: {'background-color': '#F6EBBC'}
-    });
-    this.badges.data.push(['', '<new badge>', '#555', '--', 'bad', 'an awesome badge']);
+    this.badges.data.push([
+      '/rdk/service/app/any-badge/server/svg?subject=new&privateKey=jigsaw-any-badge',
+      '<new badge>', '#555', '--', 'bad', 'an awesome badge'
+    ]);
     this.badges.refresh();
+    this.badges.emit(BadgeEvent.newBadgeAdded);
   }
 
-  public onDataChange(info: TableDataChangeEvent) {
-    const row = +info.row;
-    shared[row].tooltip = Utils.isValidSubject(this.badges, row) ?
-      'Unsaved change found, click the save<br>button to save your change.' :
-      'Invalid subject, these chars only:<br>a-z 0-9 - _';
-
-    const row1 = this.badges.data[row];
-    const row2 = tableDataBackup[row];
-    shared[row].bgColor['background-color'] = !row1 || !row2 || row1.toString() !== row2.toString() ? '#F6EBBC' : '';
+  public onDataChange(change: TableDataChangeEvent) {
+    this.badges.emit(change);
   }
 
   ngOnInit() {

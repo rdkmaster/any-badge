@@ -1,4 +1,4 @@
-<div class="guides-container" jigsawScrollBar scrollBarAxis="y" [scrollBarSnapAmount]="10" [scrollBarScrollAmount]="80">
+<div class="guides-container" jigsawScrollBar scrollBarAxis="y">
   <span class="guides-switch-lang"><a (click)="switchLang()">{{'switchLang' | translate}}</a></span>
   <div class="guides-section" *ngFor="let section of sections">
     <h3>{{ (section + '.header') | translate }}</h3>
